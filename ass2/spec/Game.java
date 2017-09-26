@@ -43,19 +43,19 @@ public class Game extends JFrame implements GLEventListener, MouseMotionListener
           GLCapabilities caps = new GLCapabilities(glp);
           GLJPanel panel = new GLJPanel();
           panel.addGLEventListener(this);
- 
-          // Add an animator to call 'display' at 60fps        
+
+          // Add an animator to call 'display' at 60fps
           FPSAnimator animator = new FPSAnimator(60);
           animator.add(panel);
           animator.start();
 
           Game s = new Game(myTerrain);
-        panel.addGLEventListener(s);
-        panel.addMouseMotionListener(s);
-        panel.setFocusable(true);
+          panel.addGLEventListener(s);
+          panel.addMouseMotionListener(s);
+          panel.setFocusable(true);
 
-        getContentPane().add(panel);
-          setSize(800, 600);        
+          getContentPane().add(panel);
+          setSize(800, 600);
           setVisible(true);
           setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
@@ -81,14 +81,14 @@ public class Game extends JFrame implements GLEventListener, MouseMotionListener
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
 
-        gl.glTranslated(0,0,-3);
-        gl.glScaled(0.1,0.1,1);
-//        gl.glRotated(-90,0,1, 0);
-        gl.glColor4d(1, 1, 1, 1);
+        // rotates on mouse drag
         gl.glRotated(rotateX, 1, 0, 0);
         gl.glRotated(rotateY, 0, 1, 0);
-//        gl.glEnable(GL2.GL_CULL_FACE);
-//        gl.glCullFace(GL2.GL_FRONT);
+
+        gl.glEnable(GL2.GL_CULL_FACE);
+        gl.glCullFace(GL2.GL_BACK);
+
+        gl.glColor4d(1, 1, 1, 1);
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
         drawTerrain(gl);
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
@@ -114,26 +114,32 @@ public class Game extends JFrame implements GLEventListener, MouseMotionListener
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
 			int height) {
-		// TODO Auto-generated method stub
+        GL2 gl = drawable.getGL().getGL2();
+
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glLoadIdentity();
+
+        double scale = myTerrain.size().height * 1.2;
+
+        gl.glOrtho(-scale,scale,-scale,scale,-scale,scale);
 		
 	}
 
 	private void drawTerrain(GL2 gl) {
         gl.glBegin(GL2.GL_TRIANGLES);
-//        System.out.println(myTerrain.size().height + " " + myTerrain.size().width);
             for (int z = 0; z < myTerrain.size().height - 1; z++) {
                 for (int x = 0; x < myTerrain.size().width - 1; x++) {
-//                    gl.glColor3f(1, 1, 1);
-                    gl.glVertex3d(x, myTerrain.getGridAltitude(x,z+1), z+1);
                     gl.glVertex3d(x+1, myTerrain.getGridAltitude(x+1,z), z);
                     gl.glVertex3d(x, myTerrain.getGridAltitude(x,z), z);
+                    gl.glVertex3d(x, myTerrain.getGridAltitude(x,z+1), z+1);
 
+                    gl.glVertex3d(x+1, myTerrain.getGridAltitude(x+1,z), z);
                     gl.glVertex3d(x, myTerrain.getGridAltitude(x,z+1), z+1);
                     gl.glVertex3d(x+1, myTerrain.getGridAltitude(x+1,z+1), z+1);
-                    gl.glVertex3d(x+1, myTerrain.getGridAltitude(x+1,z), z);
                 }
             }
         gl.glEnd();
+
     }
 
     @Override
