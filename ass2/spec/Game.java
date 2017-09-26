@@ -58,9 +58,19 @@ public class Game extends JFrame implements GLEventListener{
     }
 
 	@Override
-	public void display(GLAutoDrawable drawable) {
-		// TODO Auto-generated method stub
-		
+	public void display(GLAutoDrawable drawable){
+        GL2 gl = drawable.getGL().getGL2();
+
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glLoadIdentity();
+
+        gl.glScaled(0.1, 0.1, 1);
+
+        //Move camera
+        gl.glTranslated(0,0,-3); //so it does not get clipped.
+        myTerrain.drawTerrain(gl);
 	}
 
 	@Override
@@ -71,8 +81,18 @@ public class Game extends JFrame implements GLEventListener{
 
 	@Override
 	public void init(GLAutoDrawable drawable) {
-		// TODO Auto-generated method stub
-		
+        GL2 gl = drawable.getGL().getGL2();
+        gl.glEnable(GL2.GL_DEPTH_TEST);
+
+        // enable lighting
+        gl.glEnable(GL2.GL_LIGHTING);
+        // turn on a light. Use default settings.
+        gl.glEnable(GL2.GL_LIGHT0);
+
+        // normalise normals (!)
+        // this is necessary to make lighting work properly
+        gl.glEnable(GL2.GL_NORMALIZE);
+
 	}
 
 	@Override
