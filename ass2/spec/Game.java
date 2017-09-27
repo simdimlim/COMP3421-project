@@ -87,8 +87,9 @@ public class Game extends JFrame implements GLEventListener, MouseMotionListener
         gl.glCullFace(GL2.GL_BACK);
         gl.glColor4d(1, 1, 1, 1);
 
+        gl.glBindTexture(GL2.GL_TEXTURE_2D, myTerrain.getTerrainTexture().getTextureId());
+
         //Move camera
-        gl.glTranslated(0,0,-3); //so it does not get clipped.
         myTerrain.drawTerrain(gl);
 	}
 
@@ -103,6 +104,9 @@ public class Game extends JFrame implements GLEventListener, MouseMotionListener
         GL2 gl = drawable.getGL().getGL2();
         gl.glEnable(GL2.GL_DEPTH_TEST);
 
+        gl.glEnable(GL2.GL_TEXTURE_2D);
+
+        myTerrain.createTexture(gl);
         // enable lighting
 //        gl.glEnable(GL2.GL_LIGHTING);
 //        // turn on a light. Use default settings.
@@ -122,7 +126,7 @@ public class Game extends JFrame implements GLEventListener, MouseMotionListener
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
 
-        double scale = myTerrain.size().height * 1.2;
+        double scale = myTerrain.size().height*0.8;
 
         gl.glOrtho(-scale,scale,-scale,scale,-scale,scale);
 	}

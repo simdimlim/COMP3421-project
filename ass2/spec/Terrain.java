@@ -21,7 +21,7 @@ public class Terrain {
     private List<Tree> myTrees;
     private List<Road> myRoads;
     private float[] mySunlight;
-
+    private Texture terrainTexture;
     /**
      * Create a new terrain
      *
@@ -142,7 +142,13 @@ public class Terrain {
         myTrees.add(tree);
     }
 
+    public void createTexture(GL2 gl){
+        terrainTexture = new Texture(gl, "grass.bmp", "bmp");
+    }
 
+    public Texture getTerrainTexture(){
+        return terrainTexture;
+    }
     /**
      * Add a road. 
      * 
@@ -156,21 +162,25 @@ public class Terrain {
 
 
     void drawTerrain(GL2 gl){
-        gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
-        gl.glBegin(GL2.GL_TRIANGLES);
 
         for (int z = 0; z < mySize.height - 1; z++){
             for (int x = 0; x < mySize.width - 1; x++){
+                gl.glBegin(GL2.GL_TRIANGLES);
                 gl.glVertex3d(x+1, getGridAltitude(x+1,z), z);
+                gl.glTexCoord2d(0,0);
                 gl.glVertex3d(x, getGridAltitude(x,z), z);
+                gl.glTexCoord2d(1,1);
                 gl.glVertex3d(x, getGridAltitude(x,z+1), z+1);
+                gl.glTexCoord2d(1,0);
 
                 gl.glVertex3d(x+1, getGridAltitude(x+1,z), z);
+                gl.glTexCoord2d(0,0);
                 gl.glVertex3d(x, getGridAltitude(x,z+1), z+1);
+                gl.glTexCoord2d(1,1);
                 gl.glVertex3d(x+1, getGridAltitude(x+1,z+1), z+1);
+                gl.glTexCoord2d(1,0);
+                gl.glEnd();
             }
         }
-        gl.glEnd();
-        gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
     }
 }
