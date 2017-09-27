@@ -161,14 +161,13 @@ public class Terrain {
 
         for (int z = 0; z < mySize.height - 1; z++){
             for (int x = 0; x < mySize.width - 1; x++){
-                gl.glColor3f(1,1,1);
-                gl.glVertex3d(x, getGridAltitude(x, z+1), z+1);
-                gl.glVertex3d(x+1, getGridAltitude(x+1, z), z);
-                gl.glVertex3d(x, getGridAltitude(x, z), z);
+                gl.glVertex3d(x+1, getGridAltitude(x+1,z), z);
+                gl.glVertex3d(x, getGridAltitude(x,z), z);
+                gl.glVertex3d(x, getGridAltitude(x,z+1), z+1);
 
-                gl.glVertex3d(x, getGridAltitude(x, z+1), z+1);
-                gl.glVertex3d(x+1, getGridAltitude(x+1, z+1), z+1);
-                gl.glVertex3d(x+1, getGridAltitude(x+1, z), z);
+                gl.glVertex3d(x+1, getGridAltitude(x+1,z), z);
+                gl.glVertex3d(x, getGridAltitude(x,z+1), z+1);
+                gl.glVertex3d(x+1, getGridAltitude(x+1,z+1), z+1);
             }
         }
         gl.glEnd();
