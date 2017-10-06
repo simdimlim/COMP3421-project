@@ -130,7 +130,31 @@ public class Terrain {
 
         double altitude = 0;
 
-        
+        // closest integer < z
+        int z1 = (int) Math.floor(z);
+        // closest integer > z
+        int z2 = (int) Math.ceil(z);
+        // depth at (x+1, z2)
+        double Dz2 = getGridAltitude(z2,z2);
+        // depth at (x, z1)
+        double Dz1 = getGridAltitude(z1,z1);
+
+        // interpolation of y points
+        // depth of the left side of triangle
+        double DL = (((z - z1)/(z2 - z1)) * Dz2) + (((z2 - z)/(z2 - z1)) * Dz1);
+
+        // depth at (x+1, z1)
+        Dz1 = getGridAltitude(z2,z1);
+
+        // depth of the right side of triangle
+        double DR = (((z - z1)/(z2 - z1)) * Dz2) + (((z2 - z)/(z2 - z1)) * Dz1);
+
+        // interpolation of x points
+        int x1 = (int) Math.floor(x);
+        int x2 = (int) Math.ceil(x);
+
+        // depth at (x,z)
+        altitude = (((x - x1)/(x2 - x1)) * DR) + ((x2 - x)/(x2 - x1)) * DL;
 
         return altitude;
     }
