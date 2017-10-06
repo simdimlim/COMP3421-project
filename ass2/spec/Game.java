@@ -126,7 +126,7 @@ public class Game extends JFrame implements GLEventListener, MouseMotionListener
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
 
-        double scale = myTerrain.size().height*0.8;
+        double scale = myTerrain.size().height*1.2;
 
         gl.glOrtho(-scale,scale,-scale,scale,-scale,scale);
 	}

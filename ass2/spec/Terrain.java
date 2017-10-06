@@ -122,10 +122,16 @@ public class Terrain {
      * @return
      */
     public double altitude(double x, double z) {
+
+        // check if both doubles are actually integers
+        if (x % 1 == 0 && z % 1 == 0) {
+            return getGridAltitude((int) x, (int) z);
+        }
+
         double altitude = 0;
 
         
-        
+
         return altitude;
     }
 
