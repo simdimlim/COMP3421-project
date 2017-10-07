@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLJPanel;
 import javax.swing.JFrame;
+
+import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
 
@@ -17,20 +19,15 @@ import com.jogamp.opengl.util.FPSAnimator;
  *
  * @author malcolmr
  */
-public class Game extends JFrame implements GLEventListener, MouseMotionListener{
+public class Game extends JFrame implements GLEventListener{
 
     private Terrain myTerrain;
-    private double rotateX = 0;
-    private double rotateY = 0;
-    private Point myMousePoint = null;
-    private static final int ROTATION_SCALE = 1;
-    private double s = 1;
-
+    private Camera camera;
 
     public Game(Terrain terrain) {
     	super("Assignment 2");
         myTerrain = terrain;
-   
+
     }
     
     /** 
@@ -47,10 +44,10 @@ public class Game extends JFrame implements GLEventListener, MouseMotionListener
         FPSAnimator animator = new FPSAnimator(60);
         animator.add(panel);
         animator.start();
-
-        Game s = new Game(myTerrain);
-        panel.addGLEventListener(s);
-        panel.addMouseMotionListener(s);
+        camera = new Camera();
+        panel.addGLEventListener(this);
+        panel.addMouseMotionListener(camera);
+        panel.addKeyListener(camera);
         panel.setFocusable(true);
 
         getContentPane().add(panel);
@@ -79,10 +76,14 @@ public class Game extends JFrame implements GLEventListener, MouseMotionListener
 
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
+       double x = 2.57;
+        double y = -2;
+        double z = 1;
 
-        gl.glRotated(rotateX, 1, 0, 0);
-        gl.glRotated(rotateY, 0, 1, 0);
-
+//        gl.glRotated(camera.getRotateX(), 1, 0, 0);
+//        gl.glRotated(camera.getRotateY(), 0, 1, 0);
+        gl.glRotated(camera.getRotateY(), 0, 1, 0);
+        gl.glTranslated(camera.getPosX(), camera.getPosY(), camera.getPosZ());
         gl.glEnable(GL2.GL_CULL_FACE);
         gl.glCullFace(GL2.GL_BACK);
         gl.glColor4d(1, 1, 1, 1);
@@ -126,31 +127,8 @@ public class Game extends JFrame implements GLEventListener, MouseMotionListener
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
 
-        double scale = myTerrain.size().height*1.2;
-
-        gl.glOrtho(-scale,scale,-scale,scale,-scale,scale);
+        GLU glu = new GLU();
+        glu.gluPerspective(60, 1, 1, 10);
 	}
 
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        Point p = e.getPoint();
-
-        if (myMousePoint != null) {
-            int dx = p.x - myMousePoint.x;
-            int dy = p.y - myMousePoint.y;
-
-            // Note: dragging in the x dir rotates about y
-            //       dragging in the y dir rotates about x
-            rotateY += dx * ROTATION_SCALE;
-            rotateX += dy * ROTATION_SCALE;
-
-        }
-
-        myMousePoint = p;
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        myMousePoint = e.getPoint();
-    }
 }
