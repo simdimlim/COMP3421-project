@@ -134,25 +134,43 @@ public class Terrain {
         int z1 = (int) Math.floor(z);
         // closest integer > z
         int z2 = (int) Math.ceil(z);
-        // depth at (x+1, z2)
-        double Dz2 = getGridAltitude(z2,z2);
-        // depth at (x, z1)
-        double Dz1 = getGridAltitude(z1,z1);
+
+        // closest integer < x
+        int x1 = (int) Math.floor(x);
+        // closest integer > x
+        int x2 = (int) Math.ceil(x);
+
+        // depth at (x1, z1)
+        double Dz1 = getGridAltitude(x1,z1);
+        // depth at (x2, z2)
+        double Dz2 = getGridAltitude(x2,z2);
+
+        /*
+
+        z2 _________ .
+                    /|
+                   / |
+                  /  |
+         z _____ / . |
+                / x,z|
+               /     |
+           __ /______|
+        z1    |   |  |
+              x1  x  x2
+
+        */
 
         // interpolation of y points
         // depth of the left side of triangle
         double DL = (((z - z1)/(z2 - z1)) * Dz2) + (((z2 - z)/(z2 - z1)) * Dz1);
 
-        // depth at (x+1, z1)
-        Dz1 = getGridAltitude(z2,z1);
+        // depth at (x2, z1)
+        Dz1 = getGridAltitude(x2,z1);
 
         // depth of the right side of triangle
         double DR = (((z - z1)/(z2 - z1)) * Dz2) + (((z2 - z)/(z2 - z1)) * Dz1);
 
         // interpolation of x points
-        int x1 = (int) Math.floor(x);
-        int x2 = (int) Math.ceil(x);
-
         // depth at (x,z)
         altitude = (((x - x1)/(x2 - x1)) * DR) + ((x2 - x)/(x2 - x1)) * DL;
 
@@ -211,6 +229,10 @@ public class Terrain {
                 gl.glTexCoord2d(1,0);
                 gl.glEnd();
             }
+        }
+
+        for (Tree t : myTrees) {
+            t.draw(gl);
         }
     }
 }
