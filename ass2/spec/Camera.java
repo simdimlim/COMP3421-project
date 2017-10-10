@@ -6,13 +6,10 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
-public class Camera implements MouseMotionListener, KeyListener {
+public class Camera implements KeyListener {
     private double rotateX = 0;
-    private double rotateY = 0;
+    private double rotateY = 124;
     private double[] position;
-    private Point myMousePoint = null;
-    private static final int ROTATION_SCALE = 1;
-    private double s = 1;
 
     public Camera(){
         position = new double[3];
@@ -29,9 +26,7 @@ public class Camera implements MouseMotionListener, KeyListener {
         this.rotateX = rotateX;
     }
 
-    public double getRotateY() {
-        return rotateY;
-    }
+    public double getRotateY() { return rotateY; }
 
     public void setRotateY(double rotateY) {
         this.rotateY = rotateY;
@@ -49,28 +44,6 @@ public class Camera implements MouseMotionListener, KeyListener {
         return position[2];
     }
 
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        Point p = e.getPoint();
-
-        if (myMousePoint != null) {
-            int dx = p.x - myMousePoint.x;
-            int dy = p.y - myMousePoint.y;
-
-            // Note: dragging in the x dir rotates about y
-            //       dragging in the y dir rotates about x
-            rotateY += dx * ROTATION_SCALE;
-            rotateX += dy * ROTATION_SCALE;
-            System.out.println(rotateY);
-        }
-
-        myMousePoint = p;
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-
-    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -80,28 +53,28 @@ public class Camera implements MouseMotionListener, KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()){
-            case KeyEvent.VK_W:
+            case KeyEvent.VK_UP:
                 position[0] -= 0.1;
                 break;
-            case KeyEvent.VK_S:
+            case KeyEvent.VK_DOWN:
                 position[0] += 0.1;
                 break;
 
-            case KeyEvent.VK_A:
+            case KeyEvent.VK_LEFT:
                 position[2] += 0.1;
                 break;
 
-            case KeyEvent.VK_D:
+            case KeyEvent.VK_RIGHT:
                 position[2] -= 0.1;
                 break;
-//
-//            case KeyEvent.VK_W:
-//                position[1] -= 0.1;
-//                break;
-//
-//            case KeyEvent.VK_S:
-//                position[1] += 0.1;
-//                break;
+
+            case KeyEvent.VK_Z:
+                rotateY -= 4;
+                break;
+
+            case KeyEvent.VK_X:
+                rotateY += 4;
+                break;
         }
     }
 

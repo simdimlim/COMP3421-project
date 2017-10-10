@@ -46,7 +46,6 @@ public class Game extends JFrame implements GLEventListener{
         animator.start();
         camera = new Camera();
         panel.addGLEventListener(this);
-        panel.addMouseMotionListener(camera);
         panel.addKeyListener(camera);
         panel.setFocusable(true);
 
@@ -76,12 +75,8 @@ public class Game extends JFrame implements GLEventListener{
 
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
-       double x = 2.57;
-        double y = -2;
-        double z = 1;
 
 //        gl.glRotated(camera.getRotateX(), 1, 0, 0);
-//        gl.glRotated(camera.getRotateY(), 0, 1, 0);
         gl.glRotated(camera.getRotateY(), 0, 1, 0);
         gl.glTranslated(camera.getPosX(), camera.getPosY(), camera.getPosZ());
         gl.glEnable(GL2.GL_CULL_FACE);
@@ -128,7 +123,7 @@ public class Game extends JFrame implements GLEventListener{
         gl.glLoadIdentity();
 
         GLU glu = new GLU();
-        glu.gluPerspective(60, 1, 1, 10);
+        glu.gluPerspective(60, 1, 1, 50);
 	}
 
 }
