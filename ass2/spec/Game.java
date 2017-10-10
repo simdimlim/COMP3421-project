@@ -77,8 +77,12 @@ public class Game extends JFrame implements GLEventListener{
         gl.glLoadIdentity();
 
 //        gl.glRotated(camera.getRotateX(), 1, 0, 0);
-        gl.glRotated(camera.getRotateY(), 0, 1, 0);
-        gl.glTranslated(camera.getPosX(), camera.getPosY(), camera.getPosZ());
+        GLU glu = new GLU();
+        // and for my magic trick...
+        glu.gluLookAt(	camera.getPosX(), 2, camera.getPosZ(),
+                camera.getPosX()+camera.getLineOfSightX(), 2,  camera.getPosZ()+camera.getLineOfSightZ(),
+                0.0f, 1.0f,  0.0f);
+
         gl.glEnable(GL2.GL_CULL_FACE);
         gl.glCullFace(GL2.GL_BACK);
         gl.glColor4d(1, 1, 1, 1);
@@ -123,6 +127,7 @@ public class Game extends JFrame implements GLEventListener{
         gl.glLoadIdentity();
 
         GLU glu = new GLU();
+        // random nuymbers really idk wtf is happening
         glu.gluPerspective(60, 1, 1, 50);
 	}
 
