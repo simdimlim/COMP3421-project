@@ -15,6 +15,9 @@ public class Tree {
     private double myZ;
     private double trunkHeight;
     private double leavesRadius;
+    private Texture trunkTexture;
+    private Texture leafTexture;
+
 
     public Tree(double x, double y, double z) {
         myPos = new double[3];
@@ -29,6 +32,12 @@ public class Tree {
         trunkHeight = 2;
         leavesRadius = 0.5;
     }
+
+    public void createTexture(GL2 gl){
+        trunkTexture = new Texture(gl, "nature_trunk.jpg", "jpg");
+        leafTexture = new Texture(gl, "grass.bmp", "bmp");
+    }
+
 
     public double[] getPosition() {
         return myPos;
@@ -95,11 +104,13 @@ public class Tree {
     }
 
     public void draw(GL2 gl) {
+        createTexture(gl);
         drawTrunk(gl);
         drawLeaves(gl);
     }
 
     public void drawLeaves(GL2 gl) {
+        gl.glBindTexture(GL2.GL_TEXTURE_2D, leafTexture.getTextureId());
         double deltaT;
         double radius = leavesRadius;
         int maxStacks = 10;
@@ -134,6 +145,8 @@ public class Tree {
 //
 //                gl.glNormal3dv(normal,0);
                 gl.glVertex3d(x1+myX,y1+myY+trunkHeight,z1+myZ);
+                gl.glTexCoord2d(0,0);
+
 //                normal[0] = x2;
 //                normal[1] = y2;
 //                normal[2] = z2;
@@ -141,6 +154,7 @@ public class Tree {
 //                normalize(normal);
 //                gl.glNormal3dv(normal,0);
                 gl.glVertex3d(x2+myX,y2+myY+trunkHeight,z2+myZ);
+                gl.glTexCoord2d(1,1);
 
             };
             gl.glEnd();
@@ -148,6 +162,9 @@ public class Tree {
     }
 
     public void drawTrunk(GL2 gl) {
+
+        gl.glBindTexture(GL2.GL_TEXTURE_2D, trunkTexture.getTextureId());
+
         int theta,i;
         int dtheta = 5;
         double x1,x2,z1,z2;
@@ -181,6 +198,7 @@ public class Tree {
 //                //we are revolving around the y-axis
 
                 gl.glVertex3d(x1+myX,y[i]+myY,z1+myZ);
+                gl.glTexCoord2d(0,0);
 
 //                normal[0] = n[(i+1)*2]* Math.cos((double)theta*2.0*Math.PI/360.0);
 //                normal[1] = n[(i+1)*2+1];
@@ -190,6 +208,8 @@ public class Tree {
 //                gl.glNormal3dv(normal,0);
 
                 gl.glVertex3d(x2+myX,y[i+1]+myY,z2+myZ);
+                gl.glTexCoord2d(1,0);
+
             };
             gl.glEnd();
         }
