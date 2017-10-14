@@ -234,5 +234,9 @@ public class Terrain {
         for (Tree t : myTrees) {
             t.draw(gl);
         }
+
+        for (Road r : myRoads){
+            r.draw(gl, this);
+        }
     }
 }
