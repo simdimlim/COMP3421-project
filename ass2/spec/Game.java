@@ -23,11 +23,11 @@ public class Game extends JFrame implements GLEventListener{
 
     private Terrain myTerrain;
     private Camera camera;
+    private Lighting myLighting;
 
     public Game(Terrain terrain) {
     	super("Assignment 2");
         myTerrain = terrain;
-
     }
     
     /** 
@@ -83,6 +83,8 @@ public class Game extends JFrame implements GLEventListener{
                 camera.getPosX()+camera.getLineOfSightX(), 2,  camera.getPosZ()+camera.getLineOfSightZ(),
                 0.0f, 1.0f,  0.0f);
 
+        setLighting(gl);
+
         gl.glEnable(GL2.GL_CULL_FACE);
         gl.glCullFace(GL2.GL_BACK);
         gl.glColor4d(1, 1, 1, 1);
@@ -93,6 +95,10 @@ public class Game extends JFrame implements GLEventListener{
         myTerrain.drawTerrain(gl);
 	}
 
+	public void setLighting(GL2 gl){
+	    myLighting.setLighting(gl, myTerrain.getSunlight());
+    }
+
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
@@ -102,19 +108,23 @@ public class Game extends JFrame implements GLEventListener{
 	@Override
 	public void init(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
+        myLighting = new Lighting();
+
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+
         gl.glEnable(GL2.GL_DEPTH_TEST);
 
         gl.glEnable(GL2.GL_TEXTURE_2D);
 
         myTerrain.createTexture(gl);
         // enable lighting
-//        gl.glEnable(GL2.GL_LIGHTING);
-//        // turn on a light. Use default settings.
+        gl.glEnable(GL2.GL_LIGHTING);
+        // turn on a light. Use default settings.
 //        gl.glEnable(GL2.GL_LIGHT0);
 
         // normalise normals (!)
-        // this is necessary to make lighting work properly
-//        gl.glEnable(GL2.GL_NORMALIZE);
+//         this is necessary to make lighting work properly
+        gl.glEnable(GL2.GL_NORMALIZE);
 
 	}
 
