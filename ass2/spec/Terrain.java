@@ -247,7 +247,7 @@ public class Terrain {
                 gl.glBegin(GL2.GL_TRIANGLE_STRIP);
 
                 // set the normal here
-                gl.glNormal3dv(myNormals[count], 0);
+//                gl.glNormal3dv(myNormals[count], 0);
                 gl.glTexCoord2d(0,0);
                 gl.glVertex3d(x, getGridAltitude(x,z), z); // start
 

@@ -44,7 +44,7 @@ public class Tree {
     }
 
     double [] makeProfileNormals(double[] x, double []y){
-        double [] n = new double[x.length*2];
+        double[] n = new double[x.length*2];
         double[] v0 = new double[2];
         double[] v1 = new double[2];
         for(int i = 0; i < x.length; i++){
@@ -139,20 +139,20 @@ public class Tree {
                 z2= radius * getX(t+deltaT)*Math.sin((double)ang*2.0*Math.PI/360.0);
                 y2 = radius * getY(t+deltaT);
 
-//                double normal[] = {x1,y1,z1};
-//
-//                normalize(normal);
-//
-//                gl.glNormal3dv(normal,0);
+                double normal[] = {x1,y1,z1};
+
+                normalize(normal);
+
+                gl.glNormal3dv(normal,0);
                 gl.glVertex3d(x1+myX,y1+myY+trunkHeight,z1+myZ);
                 gl.glTexCoord2d(0,0);
 
-//                normal[0] = x2;
-//                normal[1] = y2;
-//                normal[2] = z2;
-//
-//                normalize(normal);
-//                gl.glNormal3dv(normal,0);
+                normal[0] = x2;
+                normal[1] = y2;
+                normal[2] = z2;
+
+                normalize(normal);
+                gl.glNormal3dv(normal,0);
                 gl.glVertex3d(x2+myX,y2+myY+trunkHeight,z2+myZ);
                 gl.glTexCoord2d(1,1);
 
@@ -173,7 +173,7 @@ public class Tree {
         double[] x = {0,0.1,0.1,0};
         double[] y = {0,0,trunkHeight,trunkHeight};
 
-//        double[] n = makeProfileNormals(x,y);
+        double[] n = makeProfileNormals(x,y);
 
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
 
@@ -186,26 +186,26 @@ public class Tree {
                 z1 = x[i] * Math.sin((double) theta * 2.0 * Math.PI / 360.0);
                 z2 = x[i + 1] * Math.sin((double) theta * 2.0 * Math.PI / 360.0);
 
-//                //Use same approach of revolution for the 2d normals
-//                double normal[] = new double[3];
-//                normal[0] = n[i*2]* Math.cos((double)theta*2.0*Math.PI/360.0);
-//                normal[1] = n[i*2+1];
-//                normal[2] = n[i*2]* Math.sin((double)theta*2.0*Math.PI/360.0);
-//                normalize(normal);
-//
-//                gl.glNormal3dv(normal,0);
-//                //Just use the y from the profile as
-//                //we are revolving around the y-axis
+                //Use same approach of revolution for the 2d normals
+                double normal[] = new double[3];
+                normal[0] = n[i*2]* Math.cos((double)theta*2.0*Math.PI/360.0);
+                normal[1] = n[i*2+1];
+                normal[2] = n[i*2]* Math.sin((double)theta*2.0*Math.PI/360.0);
+                normalize(normal);
+
+                gl.glNormal3dv(normal,0);
+                //Just use the y from the profile as
+                //we are revolving around the y-axis
 
                 gl.glVertex3d(x1+myX,y[i]+myY,z1+myZ);
                 gl.glTexCoord2d(0,0);
 
-//                normal[0] = n[(i+1)*2]* Math.cos((double)theta*2.0*Math.PI/360.0);
-//                normal[1] = n[(i+1)*2+1];
-//                normal[2] = n[(i+1)*2]* Math.sin((double)theta*2.0*Math.PI/360.0);
-//
-//                normalize(normal);
-//                gl.glNormal3dv(normal,0);
+                normal[0] = n[(i+1)*2]* Math.cos((double)theta*2.0*Math.PI/360.0);
+                normal[1] = n[(i+1)*2+1];
+                normal[2] = n[(i+1)*2]* Math.sin((double)theta*2.0*Math.PI/360.0);
+
+                normalize(normal);
+                gl.glNormal3dv(normal,0);
 
                 gl.glVertex3d(x2+myX,y[i+1]+myY,z2+myZ);
                 gl.glTexCoord2d(1,0);

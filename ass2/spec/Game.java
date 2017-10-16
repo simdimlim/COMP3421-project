@@ -122,7 +122,7 @@ public class Game extends JFrame implements GLEventListener{
         // enable lighting
         gl.glEnable(GL2.GL_LIGHTING);
         // turn on a light. Use default settings.
-//        gl.glEnable(GL2.GL_LIGHT0);
+        gl.glEnable(GL2.GL_LIGHT0);
 
         // normalise normals (!)
 //         this is necessary to make lighting work properly

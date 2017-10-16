@@ -5,13 +5,13 @@ import com.jogamp.opengl.GL2;
 public class Lighting {
 
     //Setting for light 0
-    private float a = 0.2f; // Ambient white light intensity.
+    private float a = 0.6f; // Ambient white light intensity.
     private float d = 0.5f; // Diffuse white light intensity
     private float s = 0.2f; // Specular white light intensity.
     private float g = 0.2f;
     private int localViewer = 0;
 
-    public Lighting(){
+    public Lighting() {
 
     }
 
@@ -21,8 +21,6 @@ public class Lighting {
         float lightAmb[] = { a, a, a, 1.0f };
         float lightDif0[] = { d, d, d, 1.0f };
         float lightSpec0[] = { s, s, s, 1.0f };
-
-        float light1[] = { 0.0f, 0.0f, 1.0f, 1.0f };
 
         float globAmb[] = { g, g, g, 1.0f };
 
