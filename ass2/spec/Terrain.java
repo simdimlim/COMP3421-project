@@ -96,19 +96,22 @@ public class Terrain {
         int count = 0;
         for (int z = 0; z < mySize.height-1; z++){
             for (int x = 0; x < mySize.width-1; x++){
-                double[] p0 = {x, getGridAltitude(x, z), z};
-                double[] p1 = {x, getGridAltitude(x, z+1), z+1};
-                double[] p2 = {x+1, getGridAltitude(x+1, z), z};
-                double[] p3 = {x+1, getGridAltitude(x+1, z+1), z+1};
+                // get the four coordinates to be drawn
+                double[] p0 = {x, this.altitude(x, z), z}; // current
+                double[] p1 = {x, this.altitude(x, z+1), z+1}; // down
+                double[] p2 = {x+1, this.altitude(x+1, z), z}; // right
+                double[] p3 = {x+1, this.altitude(x+1, z+1), z+1}; // diagonal
 
+                // p = p2 - p0 and w = p1 - p0
                 double[] p = {p2[0] - p0[0], p2[1] - p0[1], p2[2] - p0[2]};
                 double[] w = {p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2]};
 
-                double[] normal1 = MatrixMath.crossProduct(p, w);
+                double[] normal1 = MatrixMath.crossProduct(w, p);
                 myNormals[count] = normal1;
 
-                double[] v = {p2[0] - p3[0], p2[1] - p3[1], p2[2] - p3[2]};
-                double[] s = {p1[0] - p3[0], p1[1] - p3[1], p1[2] - p3[2]};
+                // v = p3 - p1   and s = p2 - p1
+                double[] v = {p3[0] - p1[0], p3[1] - p1[1], p3[2] - p1[2]};
+                double[] s = {p2[0] - p2[0], p2[1] - p1[1], p2[2] - p1[2]};
                 double[] normal2 = MatrixMath.crossProduct(v, s);
                 myNormals[count+1] = normal2;
 
@@ -237,9 +240,14 @@ public class Terrain {
         myRoads.add(road);        
     }
 
-
+    //            -----
+    //            |  /|
+    //            | / |
+    //            |/  |
+    //            -----
+    // we draw the terrain with 4 coordinates to form two triangles as shown above
     void drawTerrain(GL2 gl){
-
+        gl.glPushMatrix();
         // draw 4 vertices as triangle strips
         int count = 0;
         for (int z = 0; z < mySize.height - 1; z++){
@@ -247,28 +255,27 @@ public class Terrain {
                 gl.glBegin(GL2.GL_TRIANGLE_STRIP);
 
                 // set the normal here
-//                gl.glNormal3dv(myNormals[count], 0);
+                gl.glNormal3dv(myNormals[count], 0);
                 gl.glTexCoord2d(0,0);
-                gl.glVertex3d(x, getGridAltitude(x,z), z); // start
+                gl.glVertex3d(x, this.altitude(x,z), z); // start
 
                 gl.glTexCoord2d(0,1);
-                gl.glVertex3d(x, getGridAltitude(x,z+1), z+1); // down
+                gl.glVertex3d(x, this.altitude(x,z+1), z+1); // down
 
                 gl.glTexCoord2d(1,0);
-                gl.glVertex3d(x+1, getGridAltitude(x+1,z), z); // right
+                gl.glVertex3d(x+1, this.altitude(x+1,z), z); // right
 
                 count++;
-
                 // for the other triangle that is formed
                 gl.glNormal3dv(myNormals[count], 0);
                 gl.glTexCoord2d(1,1);
-                gl.glVertex3d(x+1, getGridAltitude(x+1,z+1), z+1); // diagonal
+                gl.glVertex3d(x+1, this.altitude(x+1,z+1), z+1); // diagonal
 
                 count++;
                 gl.glEnd();
             }
         }
-
+        gl.glPopMatrix();
         for (Tree t : myTrees) {
             t.draw(gl);
         }

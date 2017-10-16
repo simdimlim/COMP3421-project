@@ -6,7 +6,7 @@ public class Lighting {
 
     //Setting for light 0
     private float a = 0.6f; // Ambient white light intensity.
-    private float d = 0.5f; // Diffuse white light intensity
+    private float d = 0.9f; // Diffuse white light intensity
     private float s = 0.2f; // Specular white light intensity.
     private float g = 0.2f;
     private int localViewer = 0;
