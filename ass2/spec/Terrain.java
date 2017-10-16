@@ -4,6 +4,7 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import java.awt.Dimension;
+import java.rmi.MarshalException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Terrain {
     private List<Tree> myTrees;
     private List<Road> myRoads;
     private float[] mySunlight;
+    private double[][] myNormals;
     private Texture terrainTexture;
     /**
      * Create a new terrain
@@ -34,6 +36,7 @@ public class Terrain {
         myTrees = new ArrayList<Tree>();
         myRoads = new ArrayList<Road>();
         mySunlight = new float[3];
+        myNormals = new double[(mySize.width-1) * (mySize.height) * 2][3];
     }
     
     public Terrain(Dimension size) {
@@ -85,6 +88,32 @@ public class Terrain {
         for (int i = 0; i < width && i < oldAlt.length; i++) {
             for (int j = 0; j < height && j < oldAlt[i].length; j++) {
                 myAltitude[i][j] = oldAlt[i][j];
+            }
+        }
+    }
+
+    public void setNormals(){
+        int count = 0;
+        for (int z = 0; z < mySize.height-1; z++){
+            for (int x = 0; x < mySize.width-1; x++){
+                double[] p0 = {x, getGridAltitude(x, z), z};
+                double[] p1 = {x, getGridAltitude(x, z+1), z+1};
+                double[] p2 = {x+1, getGridAltitude(x+1, z), z};
+                double[] p3 = {x+1, getGridAltitude(x+1, z+1), z+1};
+
+                double[] p = {p2[0] - p0[0], p2[1] - p0[1], p2[2] - p0[2]};
+                double[] w = {p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2]};
+
+                double[] normal1 = MatrixMath.crossProduct(p, w);
+                myNormals[count] = normal1;
+
+                double[] v = {p2[0] - p3[0], p2[1] - p3[1], p2[2] - p3[2]};
+                double[] s = {p1[0] - p3[0], p1[1] - p3[1], p1[2] - p3[2]};
+                double[] normal2 = MatrixMath.crossProduct(v, s);
+                myNormals[count+1] = normal2;
+
+                count += 2;
+
             }
         }
     }
@@ -197,7 +226,7 @@ public class Terrain {
     public Texture getTerrainTexture(){
         return terrainTexture;
     }
-    /**
+    /*
      * Add a road. 
      * 
      * @param x
@@ -211,22 +240,31 @@ public class Terrain {
 
     void drawTerrain(GL2 gl){
 
+        // draw 4 vertices as triangle strips
+        int count = 0;
         for (int z = 0; z < mySize.height - 1; z++){
             for (int x = 0; x < mySize.width - 1; x++){
-                gl.glBegin(GL2.GL_TRIANGLES);
-                gl.glVertex3d(x+1, getGridAltitude(x+1,z), z);
-                gl.glTexCoord2d(0,0);
-                gl.glVertex3d(x, getGridAltitude(x,z), z);
-                gl.glTexCoord2d(1,1);
-                gl.glVertex3d(x, getGridAltitude(x,z+1), z+1);
-                gl.glTexCoord2d(1,0);
+                gl.glBegin(GL2.GL_TRIANGLE_STRIP);
 
-                gl.glVertex3d(x+1, getGridAltitude(x+1,z), z);
+                // set the normal here
+                gl.glNormal3dv(myNormals[count], 0);
                 gl.glTexCoord2d(0,0);
-                gl.glVertex3d(x, getGridAltitude(x,z+1), z+1);
-                gl.glTexCoord2d(1,1);
-                gl.glVertex3d(x+1, getGridAltitude(x+1,z+1), z+1);
+                gl.glVertex3d(x, getGridAltitude(x,z), z); // start
+
+                gl.glTexCoord2d(0,1);
+                gl.glVertex3d(x, getGridAltitude(x,z+1), z+1); // down
+
                 gl.glTexCoord2d(1,0);
+                gl.glVertex3d(x+1, getGridAltitude(x+1,z), z); // right
+
+                count++;
+
+                // for the other triangle that is formed
+                gl.glNormal3dv(myNormals[count], 0);
+                gl.glTexCoord2d(1,1);
+                gl.glVertex3d(x+1, getGridAltitude(x+1,z+1), z+1); // diagonal
+
+                count++;
                 gl.glEnd();
             }
         }

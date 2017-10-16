@@ -84,6 +84,7 @@ public class Game extends JFrame implements GLEventListener{
                 0.0f, 1.0f,  0.0f);
 
         setLighting(gl);
+        myTerrain.setNormals();
 
         gl.glEnable(GL2.GL_CULL_FACE);
         gl.glCullFace(GL2.GL_BACK);
@@ -92,6 +93,7 @@ public class Game extends JFrame implements GLEventListener{
         gl.glBindTexture(GL2.GL_TEXTURE_2D, myTerrain.getTerrainTexture().getTextureId());
 
         //Move camera
+
         myTerrain.drawTerrain(gl);
 	}
 
