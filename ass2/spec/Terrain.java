@@ -21,6 +21,7 @@ public class Terrain {
     private double[][] myAltitude;
     private List<Tree> myTrees;
     private List<Road> myRoads;
+    private List<Cube> myCubes;
     private float[] mySunlight;
     private double[][] myNormals;
     private Texture terrainTexture;
@@ -35,6 +36,7 @@ public class Terrain {
         myAltitude = new double[width][depth];
         myTrees = new ArrayList<Tree>();
         myRoads = new ArrayList<Road>();
+        myCubes = new ArrayList<Cube>();
         mySunlight = new float[3];
         myNormals = new double[(mySize.width-1) * (mySize.height) * 2][3];
     }
@@ -222,6 +224,12 @@ public class Terrain {
         myTrees.add(tree);
     }
 
+    public void addCube(double x, double z){
+        double y = altitude(x, z);
+        Cube cube = new Cube(x, y, z);
+        myCubes.add(cube);
+    }
+
     public void createTexture(GL2 gl){
         terrainTexture = new Texture(gl, "grass.bmp", "bmp");
     }
@@ -240,6 +248,12 @@ public class Terrain {
         myRoads.add(road);        
     }
 
+    public void setCubeVBO(GL2 gl){
+        for (Cube c : myCubes){
+            c.init(gl);
+        }
+    }
+
     //            -----
     //            |  /|
     //            | / |
@@ -248,6 +262,9 @@ public class Terrain {
     // we draw the terrain with 4 coordinates to form two triangles as shown above
     void drawTerrain(GL2 gl){
         gl.glPushMatrix();
+
+        // create and store the vbo on the graphics card
+
         // draw 4 vertices as triangle strips
         int count = 0;
         for (int z = 0; z < mySize.height - 1; z++){
@@ -283,5 +300,10 @@ public class Terrain {
         for (Road r : myRoads){
             r.draw(gl, this);
         }
+
+        for (Cube r : myCubes){
+            r.draw(gl);
+        }
+
     }
 }
