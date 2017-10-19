@@ -123,7 +123,7 @@ public class Game extends JFrame implements GLEventListener{
         gl.glEnable(GL2.GL_TEXTURE_2D);
 
         myTerrain.createTexture(gl);
-//        myTerrain.setCubeVBO(gl);
+        myTerrain.setCubeVBO(gl);
         // enable lighting
         gl.glEnable(GL2.GL_LIGHTING);
         // turn on a light. Use default settings.
