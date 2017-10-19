@@ -301,9 +301,9 @@ public class Terrain {
             r.draw(gl, this);
         }
 
-        for (Cube r : myCubes){
-            r.draw(gl);
-        }
+//        for (Cube r : myCubes){
+//            r.draw(gl);
+//        }
 
     }
 }
