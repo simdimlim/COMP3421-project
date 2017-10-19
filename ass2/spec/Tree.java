@@ -156,6 +156,7 @@ public class Tree {
                 gl.glVertex3d(x2+myX,y2+myY+trunkHeight,z2+myZ);
                 gl.glTexCoord2d(1,1);
 
+
             };
             gl.glEnd();
         }

@@ -24,10 +24,12 @@ public class Game extends JFrame implements GLEventListener{
     private Terrain myTerrain;
     private Camera camera;
     private Lighting myLighting;
+    private Avatar myAvatar;
 
     public Game(Terrain terrain) {
     	super("Assignment 2");
         myTerrain = terrain;
+        myAvatar = new Avatar();
     }
     
     /** 
@@ -44,9 +46,10 @@ public class Game extends JFrame implements GLEventListener{
         FPSAnimator animator = new FPSAnimator(60);
         animator.add(panel);
         animator.start();
-        camera = new Camera();
+        camera = new Camera(myAvatar, myTerrain);
         panel.addGLEventListener(this);
         panel.addKeyListener(camera);
+        panel.addKeyListener(myAvatar);
         panel.setFocusable(true);
 
         getContentPane().add(panel);
@@ -76,14 +79,24 @@ public class Game extends JFrame implements GLEventListener{
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
 
-//        gl.glRotated(camera.getRotateX(), 1, 0, 0);
         GLU glu = new GLU();
-        // and for my magic trick...
-        glu.gluLookAt(	camera.getPosX(), 2, camera.getPosZ(),
-                camera.getPosX()+camera.getLineOfSightX(), 2,  camera.getPosZ()+camera.getLineOfSightZ(),
+
+//        This is for third person view:
+        double distance = 2;
+//        glu.gluLookAt(	myAvatar.getX() - (distance * Math.sin(Math.toRadians(myAvatar.getRotY()))), 2, myAvatar.getZ()-(distance * Math.cos(Math.toRadians(myAvatar.getRotY()))),
+//                myAvatar.getX(), 2,  myAvatar.getZ(),
+//                0.0f, 1.0f,  0.0f);
+
+//        glu.gluLookAt(	myAvatar.getX(), 2, myAvatar.getZ(),
+//                myAvatar.getX()+3, 2,  myAvatar.getZ()+3,
+//                0.0f, 1.0f,  0.0f);
+
+        glu.gluLookAt(	camera.getEyeX(), camera.getY(), camera.getEyeZ(),
+                camera.getCenterX(), camera.getY(),  camera.getCenterZ(),
                 0.0f, 1.0f,  0.0f);
 
-        setLighting(gl);
+
+                setLighting(gl);
         myTerrain.setNormals();
 
         gl.glEnable(GL2.GL_CULL_FACE);
@@ -95,6 +108,8 @@ public class Game extends JFrame implements GLEventListener{
         //Move camera
 
         myTerrain.drawTerrain(gl);
+
+        camera.drawAv(gl);
 	}
 
 	public void setLighting(GL2 gl){
