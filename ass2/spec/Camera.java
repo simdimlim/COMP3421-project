@@ -45,7 +45,7 @@ public class Camera implements KeyListener {
         if (avatarView) {
             return myAvatar.getY() + 1;
         } else {
-            return position[1] + 1;
+            return position[1] + 1.5;
         }
     }
 
@@ -122,14 +122,14 @@ public class Camera implements KeyListener {
                 rotateY -= 0.1;
                 lineofsight[0] = Math.sin(rotateY);
                 lineofsight[2] = -Math.cos(rotateY);
-                myAvatar.rotate(1);
+                myAvatar.rotate(1.5);
                 break;
 
             case KeyEvent.VK_RIGHT:
                 rotateY += 0.1;
                 lineofsight[0] = Math.sin(rotateY);
                 lineofsight[2] = -Math.cos(rotateY);
-                myAvatar.rotate(-1);
+                myAvatar.rotate(-1.5);
                 break;
 
             case KeyEvent.VK_A:

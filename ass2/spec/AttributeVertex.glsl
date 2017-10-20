@@ -1,7 +1,7 @@
-#version 130
+#version 120
 
-in vec4 vertexCol;
-in vec4 vertexPos;
+attribute vec4 vertexCol;
+attribute vec4 vertexPos;
 
 void main(void) {
 	gl_Position=gl_ModelViewProjectionMatrix*vertexPos;

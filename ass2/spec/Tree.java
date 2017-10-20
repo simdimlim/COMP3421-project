@@ -29,13 +29,13 @@ public class Tree {
         myY = y;
         myZ = z;
 
-        trunkHeight = 2;
-        leavesRadius = 0.5;
+        trunkHeight = 1.75;
+        leavesRadius = 0.7;
     }
 
     public void createTexture(GL2 gl){
         trunkTexture = new Texture(gl, "nature_trunk.jpg", "jpg");
-        leafTexture = new Texture(gl, "grass.bmp", "bmp");
+        leafTexture = new Texture(gl, "leaves.jpg", "jpg");
     }
 
 
@@ -144,8 +144,10 @@ public class Tree {
                 normalize(normal);
 
                 gl.glNormal3dv(normal,0);
-                gl.glVertex3d(x1+myX,y1+myY+trunkHeight,z1+myZ);
-                gl.glTexCoord2d(0,0);
+                double tCoord = 1.0/maxStacks * i;
+                double sCoord = 1.0/maxStacks * j;
+                gl.glTexCoord2d(sCoord,tCoord);
+                gl.glVertex3d(x1+myX,y1+myY+trunkHeight+(0.85*leavesRadius),z1+myZ);
 
                 normal[0] = x2;
                 normal[1] = y2;
@@ -153,8 +155,9 @@ public class Tree {
 
                 normalize(normal);
                 gl.glNormal3dv(normal,0);
-                gl.glVertex3d(x2+myX,y2+myY+trunkHeight,z2+myZ);
-                gl.glTexCoord2d(1,1);
+                tCoord = 1.0/maxStacks * (i+1);
+                gl.glTexCoord2d(sCoord,tCoord);
+                gl.glVertex3d(x2+myX,y2+myY+trunkHeight+(0.85*leavesRadius),z2+myZ);
 
 
             };
@@ -166,54 +169,27 @@ public class Tree {
 
         gl.glBindTexture(GL2.GL_TEXTURE_2D, trunkTexture.getTextureId());
 
-        int theta,i;
-        int dtheta = 5;
-        double x1,x2,z1,z2;
+        int SLICES = 32;
+        double angleIncrement = (Math.PI * 2.0) / SLICES;
+        double yBottom = myY;
+        double yTop = myY+trunkHeight;
 
-        //Cylinder
-        double[] x = {0,0.1,0.1,0};
-        double[] y = {0,0,trunkHeight,trunkHeight};
+        gl.glBegin(GL2.GL_QUAD_STRIP);{
+            for(int i=0; i<= SLICES; i++){
+                double angle0 = i*angleIncrement;
+                double xPos0 = Math.cos(angle0)*0.2;
+                double zPos0 = Math.sin(angle0)*0.2;
+                double sCoord = 2.0/SLICES * i; //Or * 2 to repeat label
 
-        double[] n = makeProfileNormals(x,y);
+                gl.glNormal3d(xPos0, 0, zPos0);
+                gl.glTexCoord2d(sCoord,1);
+                gl.glVertex3d(xPos0+myX,yBottom,zPos0+myZ);
+                gl.glTexCoord2d(sCoord,0);
+                gl.glVertex3d(xPos0+myX,yTop,zPos0+myZ);
 
-        gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+            }
+        } gl.glEnd();
 
-        for (i=0; i < x.length-1 ; i++) {
-            gl.glBegin(GL2.GL_TRIANGLE_STRIP);
-            for (theta = 0; theta <= 360; theta += dtheta) {
-
-                x1 = x[i] * Math.cos((double) theta * 2.0 * Math.PI / 360.0);
-                x2 = x[i + 1] * Math.cos((double) theta * 2.0 * Math.PI / 360.0);
-                z1 = x[i] * Math.sin((double) theta * 2.0 * Math.PI / 360.0);
-                z2 = x[i + 1] * Math.sin((double) theta * 2.0 * Math.PI / 360.0);
-
-                //Use same approach of revolution for the 2d normals
-                double normal[] = new double[3];
-                normal[0] = n[i*2]* Math.cos((double)theta*2.0*Math.PI/360.0);
-                normal[1] = n[i*2+1];
-                normal[2] = n[i*2]* Math.sin((double)theta*2.0*Math.PI/360.0);
-                normalize(normal);
-
-                gl.glNormal3dv(normal,0);
-                //Just use the y from the profile as
-                //we are revolving around the y-axis
-
-                gl.glVertex3d(x1+myX,y[i]+myY,z1+myZ);
-                gl.glTexCoord2d(0,0);
-
-                normal[0] = n[(i+1)*2]* Math.cos((double)theta*2.0*Math.PI/360.0);
-                normal[1] = n[(i+1)*2+1];
-                normal[2] = n[(i+1)*2]* Math.sin((double)theta*2.0*Math.PI/360.0);
-
-                normalize(normal);
-                gl.glNormal3dv(normal,0);
-
-                gl.glVertex3d(x2+myX,y[i+1]+myY,z2+myZ);
-                gl.glTexCoord2d(1,0);
-
-            };
-            gl.glEnd();
-        }
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
     }
 
