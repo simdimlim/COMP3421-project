@@ -221,7 +221,7 @@ public class Road {
 
     public void draw(GL2 gl, Terrain terrain){
         gl.glPushMatrix();
-        roadTexture = new Texture(gl, "road2.jpg", "jpg");
+        roadTexture = new Texture(gl, "road2.jpg", "jpg", true);
         gl.glBindTexture(GL2.GL_TEXTURE_2D, roadTexture.getTextureId());
 
         double width = myWidth/2;

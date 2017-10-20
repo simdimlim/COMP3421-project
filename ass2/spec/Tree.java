@@ -17,6 +17,7 @@ public class Tree {
     private double leavesRadius;
     private Texture trunkTexture;
     private Texture leafTexture;
+    private double[][] leafPoints;
 
 
     public Tree(double x, double y, double z) {
@@ -31,54 +32,19 @@ public class Tree {
 
         trunkHeight = 1.75;
         leavesRadius = 0.7;
+        leafPoints = new double[420][3];
+        
+        setLeafPoints();
     }
 
     public void createTexture(GL2 gl){
-        trunkTexture = new Texture(gl, "nature_trunk.jpg", "jpg");
-        leafTexture = new Texture(gl, "leaves.jpg", "jpg");
+        trunkTexture = new Texture(gl, "nature_trunk.jpg", "jpg", true);
+        leafTexture = new Texture(gl, "leaves.jpg", "jpg", true);
     }
 
 
     public double[] getPosition() {
         return myPos;
-    }
-
-    double [] makeProfileNormals(double[] x, double []y){
-        double[] n = new double[x.length*2];
-        double[] v0 = new double[2];
-        double[] v1 = new double[2];
-        for(int i = 0; i < x.length; i++){
-            if (i == 0) {
-                v0[0] = x[i];
-                v0[1] = y[i];
-                v1[0] = x[i+1];
-                v1[1] = y[i+1];
-
-            } else if (i == x.length-1) {
-                v0[0] = x[i-1];
-                v0[1] = y[i-1];
-                v1[0] = x[i];
-                v1[1] = y[i];
-            } else {
-                v0[0] = x[i-1];
-                v0[1] = y[i-1];
-                v1[0] = x[i+1];
-                v1[1] = y[i+1];
-            }
-
-            double dx = v1[0] - v0[0];
-            double dy = v1[1] - v0[1];
-            double mag = Math.sqrt(dx*dx + dy*dy);
-            if(mag != 0){
-
-                dx = dx/mag;
-                dy = dy/mag;
-            }
-            //create a normal from the tangent in 2D
-            n[i*2] = dy;
-            n[i*2+1] = -dx;
-        }
-        return n;
     }
 
     public void normalize(double v[])
@@ -109,10 +75,9 @@ public class Tree {
         drawLeaves(gl);
     }
 
-    public void drawLeaves(GL2 gl) {
-        gl.glBindTexture(GL2.GL_TEXTURE_2D, leafTexture.getTextureId());
+    public void setLeafPoints() {
         double deltaT;
-        double radius = leavesRadius;
+        double radius = 0.2;
         int maxStacks = 10;
         int maxSlices = 20;
         //We want t to go from t = -radius to t = radius
@@ -122,24 +87,52 @@ public class Tree {
         int ang;
         int delang = 360/maxSlices;
         double x1,x2,z1,z2,y1,y2;
+        int count = 0;
 
         for (int i = 0; i < maxStacks; i++)
         {
             double t = -0.25 + i*deltaT;
 
-            gl.glBegin(GL2.GL_TRIANGLE_STRIP);
             for(int j = 0; j <= maxSlices; j++)
             {
                 ang = j*delang;
                 x1=radius * getX(t)*Math.cos((double)ang*2.0*Math.PI/360.0);
                 x2=radius * getX(t+deltaT)*Math.cos((double)ang*2.0*Math.PI/360.0);
-                y1 = radius * getY(t);
+                y1=radius * getY(t);
 
                 z1=radius * getX(t)*Math.sin((double)ang*2.0*Math.PI/360.0);
                 z2= radius * getX(t+deltaT)*Math.sin((double)ang*2.0*Math.PI/360.0);
                 y2 = radius * getY(t+deltaT);
 
-                double normal[] = {x1,y1,z1};
+                leafPoints[count] = new double[]{x1,y1,z1};
+
+                leafPoints[count+1] = new double[]{x2,y2,z2};
+
+                count += 2;
+            }
+        }
+    }
+
+    public void drawLeaves(GL2 gl) {
+        gl.glBindTexture(GL2.GL_TEXTURE_2D, leafTexture.getTextureId());
+        double deltaT;
+        int maxStacks = 10;
+        int maxSlices = 20;
+        //We want t to go from t = -radius to t = radius
+        //as we want to revolve a semi-circle around
+        //the y-axis.
+        deltaT = 0.5/maxStacks;
+
+        int count = 0;
+
+        for (int i = 0; i < maxStacks; i++)
+        {
+
+            gl.glBegin(GL2.GL_TRIANGLE_STRIP);
+            for(int j = 0; j <= maxSlices; j++)
+            {
+
+                double normal[] = leafPoints[count];
 
                 normalize(normal);
 
@@ -147,18 +140,22 @@ public class Tree {
                 double tCoord = 1.0/maxStacks * i;
                 double sCoord = 1.0/maxStacks * j;
                 gl.glTexCoord2d(sCoord,tCoord);
-                gl.glVertex3d(x1+myX,y1+myY+trunkHeight+(0.85*leavesRadius),z1+myZ);
+                gl.glVertex3d(leafPoints[count][0]+myX,
+                        leafPoints[count][1]+myY+trunkHeight+(0.85*leavesRadius),
+                        leafPoints[count][2]+myZ);
 
-                normal[0] = x2;
-                normal[1] = y2;
-                normal[2] = z2;
+                normal = leafPoints[count+1];
 
                 normalize(normal);
                 gl.glNormal3dv(normal,0);
+
                 tCoord = 1.0/maxStacks * (i+1);
                 gl.glTexCoord2d(sCoord,tCoord);
-                gl.glVertex3d(x2+myX,y2+myY+trunkHeight+(0.85*leavesRadius),z2+myZ);
+                gl.glVertex3d(leafPoints[count+1][0]+myX,
+                        leafPoints[count+1][1]+myY+trunkHeight+(0.85*leavesRadius),
+                        leafPoints[count+1][2]+myZ);
 
+                count += 2;
 
             };
             gl.glEnd();
@@ -169,17 +166,17 @@ public class Tree {
 
         gl.glBindTexture(GL2.GL_TEXTURE_2D, trunkTexture.getTextureId());
 
-        int SLICES = 32;
-        double angleIncrement = (Math.PI * 2.0) / SLICES;
+        int slices = 32;
+        double angleIncrement = (Math.PI * 2.0) / slices;
         double yBottom = myY;
         double yTop = myY+trunkHeight;
 
         gl.glBegin(GL2.GL_QUAD_STRIP);{
-            for(int i=0; i<= SLICES; i++){
+            for(int i=0; i<= slices; i++){
                 double angle0 = i*angleIncrement;
                 double xPos0 = Math.cos(angle0)*0.2;
                 double zPos0 = Math.sin(angle0)*0.2;
-                double sCoord = 2.0/SLICES * i; //Or * 2 to repeat label
+                double sCoord = 2.0/slices * i; //Or * 2 to repeat label
 
                 gl.glNormal3d(xPos0, 0, zPos0);
                 gl.glTexCoord2d(sCoord,1);

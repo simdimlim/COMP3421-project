@@ -39,6 +39,7 @@ public class Terrain {
         myCubes = new ArrayList<Cube>();
         mySunlight = new float[3];
         myNormals = new double[(mySize.width-1) * (mySize.height) * 2][3];
+        setNormals();
     }
     
     public Terrain(Dimension size) {
@@ -231,7 +232,7 @@ public class Terrain {
     }
 
     public void createTexture(GL2 gl){
-        terrainTexture = new Texture(gl, "grass2.png", "png");
+        terrainTexture = new Texture(gl, "grass2.png", "png", true);
     }
 
     public Texture getTerrainTexture(){

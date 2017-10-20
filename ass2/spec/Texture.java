@@ -16,8 +16,10 @@ import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
 public class Texture {
     private int[] textureID = new int[1];
+    private boolean mipMapEnabled = true;
 
-    public Texture(GL2 gl, String fileName, String extension){
+    public Texture(GL2 gl, String fileName, String extension, boolean mipmaps){
+        mipMapEnabled = mipmaps;
         TextureData data = null;
         try {
             File file = new File(fileName);
@@ -50,13 +52,27 @@ public class Texture {
                 data.getPixelType(),
                 data.getBuffer());
 
-        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
-        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR_MIPMAP_LINEAR);
+        setFilters(gl);
+    }
 
-        float fLargest[] = new float[1];
-        gl.glGetFloatv(GL.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, fLargest,0);
-        gl.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAX_ANISOTROPY_EXT, fLargest[0]);
-        gl.glGenerateMipmap(GL2.GL_TEXTURE_2D);
+    private void setFilters(GL2 gl){
+        // Build the texture from data.
+        if (mipMapEnabled) {
+            // Set texture parameters to enable automatic mipmap generation and bilinear/trilinear filtering
+            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR_MIPMAP_LINEAR);
+
+            float fLargest[] = new float[1];
+            gl.glGetFloatv(GL.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, fLargest,0);
+//            System.out.println(fLargest[0]);
+            gl.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAX_ANISOTROPY_EXT, fLargest[0]);
+            gl.glGenerateMipmap(GL2.GL_TEXTURE_2D);
+        } else {
+            // Set texture parameters to enable bilinear filtering.
+            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
+        }
+
     }
 
     public int getTextureId() {

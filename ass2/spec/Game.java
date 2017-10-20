@@ -84,9 +84,7 @@ public class Game extends JFrame implements GLEventListener{
                 camera.getCenterX(), camera.getY(),  camera.getCenterZ(),
                 0.0f, 1.0f,  0.0f);
 
-
         setLighting(gl);
-        myTerrain.setNormals();
 
         gl.glEnable(GL2.GL_CULL_FACE);
         gl.glCullFace(GL2.GL_BACK);
@@ -133,6 +131,7 @@ public class Game extends JFrame implements GLEventListener{
 //         this is necessary to make lighting work properly
         gl.glEnable(GL2.GL_NORMALIZE);
 
+        myTerrain.setNormals();
 	}
 
 	@Override
