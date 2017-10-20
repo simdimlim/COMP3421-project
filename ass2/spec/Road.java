@@ -221,7 +221,7 @@ public class Road {
 
     public void draw(GL2 gl, Terrain terrain){
         gl.glPushMatrix();
-        roadTexture = new Texture(gl, "road.jpg", "jpg");
+        roadTexture = new Texture(gl, "road2.jpg", "jpg");
         gl.glBindTexture(GL2.GL_TEXTURE_2D, roadTexture.getTextureId());
 
         double width = myWidth/2;
@@ -264,7 +264,7 @@ public class Road {
                     spinePoint[0] - normalPoint[0],
                     spinePoint[1],spinePoint[2] - normalPoint[1]
             );
-            gl.glTexCoord2d(spinePoint[0] - normalPoint[0], spinePoint[2] - normalPoint[1]);
+            gl.glTexCoord2d(spinePoint[0] + normalPoint[0], spinePoint[2] + normalPoint[1]);
             gl.glVertex3d(
                     spinePoint[0] + normalPoint[0],
                     spinePoint[1],spinePoint[2] + normalPoint[1]

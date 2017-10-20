@@ -231,7 +231,7 @@ public class Terrain {
     }
 
     public void createTexture(GL2 gl){
-        terrainTexture = new Texture(gl, "grass.bmp", "bmp");
+        terrainTexture = new Texture(gl, "grass2.png", "png");
     }
 
     public Texture getTerrainTexture(){
