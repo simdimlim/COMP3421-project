@@ -23,6 +23,7 @@ public class Texture {
         TextureData data = null;
         try {
             File file = new File(fileName);
+            System.out.println(file);
             BufferedImage img = ImageIO.read(file); // read file into BufferedImage
             ImageUtil.flipImageVertically(img);
 

@@ -94,7 +94,7 @@ public class Game extends JFrame implements GLEventListener{
 
         //Move camera
 
-        myTerrain.drawTerrain(gl);
+        myTerrain.draw(gl);
 
         camera.drawAv(gl);
 	}

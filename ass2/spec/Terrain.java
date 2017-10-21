@@ -25,6 +25,8 @@ public class Terrain {
     private float[] mySunlight;
     private double[][] myNormals;
     private Texture terrainTexture;
+    private ParticleSystem particleSystem;
+
     /**
      * Create a new terrain
      *
@@ -39,6 +41,7 @@ public class Terrain {
         myCubes = new ArrayList<Cube>();
         mySunlight = new float[3];
         myNormals = new double[(mySize.width-1) * (mySize.height) * 2][3];
+        particleSystem = new ParticleSystem(width, depth);
         setNormals();
     }
     
@@ -265,6 +268,14 @@ public class Terrain {
         }
     }
 
+    public void draw(GL2 gl){
+        drawTerrain(gl);
+        drawTrees(gl);
+        drawRoads(gl);
+        drawCube(gl);
+        particleSystem.draw(gl);
+    }
+
     //            -----
     //            |  /|
     //            | / |
@@ -275,13 +286,12 @@ public class Terrain {
         gl.glPushMatrix();
 
         // create and store the vbo on the graphics card
-
         // draw 4 vertices as triangle strips
         int count = 0;
         for (int z = 0; z < mySize.height - 1; z++){
             for (int x = 0; x < mySize.width - 1; x++){
                 gl.glBegin(GL2.GL_TRIANGLE_STRIP);
-
+//                System.out.println(x + " " + altitude(x, z) + " " + z);
                 // set the normal here
                 gl.glNormal3dv(myNormals[count], 0);
                 gl.glTexCoord2d(0,0);
@@ -304,17 +314,25 @@ public class Terrain {
             }
         }
         gl.glPopMatrix();
+    }
+
+    private void drawTrees(GL2 gl){
         for (Tree t : myTrees) {
             t.draw(gl);
         }
+    }
 
+    private void drawRoads(GL2 gl){
         for (Road r : myRoads){
             r.draw(gl, this);
         }
+    }
 
+    private void drawCube(GL2 gl){
         for (Cube r : myCubes){
             r.draw(gl);
         }
-
     }
+
+
 }
