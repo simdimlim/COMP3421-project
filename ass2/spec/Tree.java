@@ -17,7 +17,6 @@ public class Tree {
     private double leavesRadius;
     private Texture trunkTexture;
     private Texture leafTexture;
-    private double[][] leafPoints;
 
 
     public Tree(double x, double y, double z) {
@@ -32,9 +31,6 @@ public class Tree {
 
         trunkHeight = 1.75;
         leavesRadius = 0.7;
-        leafPoints = new double[420][3];
-        
-        setLeafPoints();
     }
 
     public void createTexture(GL2 gl){
@@ -75,9 +71,10 @@ public class Tree {
         drawLeaves(gl);
     }
 
-    public void setLeafPoints() {
+    public void drawLeaves(GL2 gl) {
+        gl.glBindTexture(GL2.GL_TEXTURE_2D, leafTexture.getTextureId());
         double deltaT;
-        double radius = 0.2;
+        double radius = leavesRadius;
         int maxStacks = 10;
         int maxSlices = 20;
         //We want t to go from t = -radius to t = radius
@@ -87,52 +84,24 @@ public class Tree {
         int ang;
         int delang = 360/maxSlices;
         double x1,x2,z1,z2,y1,y2;
-        int count = 0;
 
         for (int i = 0; i < maxStacks; i++)
         {
             double t = -0.25 + i*deltaT;
 
+            gl.glBegin(GL2.GL_TRIANGLE_STRIP);
             for(int j = 0; j <= maxSlices; j++)
             {
                 ang = j*delang;
                 x1=radius * getX(t)*Math.cos((double)ang*2.0*Math.PI/360.0);
                 x2=radius * getX(t+deltaT)*Math.cos((double)ang*2.0*Math.PI/360.0);
-                y1=radius * getY(t);
+                y1 = radius * getY(t);
 
                 z1=radius * getX(t)*Math.sin((double)ang*2.0*Math.PI/360.0);
                 z2= radius * getX(t+deltaT)*Math.sin((double)ang*2.0*Math.PI/360.0);
                 y2 = radius * getY(t+deltaT);
 
-                leafPoints[count] = new double[]{x1,y1,z1};
-
-                leafPoints[count+1] = new double[]{x2,y2,z2};
-
-                count += 2;
-            }
-        }
-    }
-
-    public void drawLeaves(GL2 gl) {
-        gl.glBindTexture(GL2.GL_TEXTURE_2D, leafTexture.getTextureId());
-        double deltaT;
-        int maxStacks = 10;
-        int maxSlices = 20;
-        //We want t to go from t = -radius to t = radius
-        //as we want to revolve a semi-circle around
-        //the y-axis.
-        deltaT = 0.5/maxStacks;
-
-        int count = 0;
-
-        for (int i = 0; i < maxStacks; i++)
-        {
-
-            gl.glBegin(GL2.GL_TRIANGLE_STRIP);
-            for(int j = 0; j <= maxSlices; j++)
-            {
-
-                double normal[] = leafPoints[count];
+                double normal[] = {x1,y1,z1};
 
                 normalize(normal);
 
@@ -140,22 +109,17 @@ public class Tree {
                 double tCoord = 1.0/maxStacks * i;
                 double sCoord = 1.0/maxStacks * j;
                 gl.glTexCoord2d(sCoord,tCoord);
-                gl.glVertex3d(leafPoints[count][0]+myX,
-                        leafPoints[count][1]+myY+trunkHeight+(0.85*leavesRadius),
-                        leafPoints[count][2]+myZ);
+                gl.glVertex3d(x1+myX,y1+myY+trunkHeight+(0.85*leavesRadius),z1+myZ);
 
-                normal = leafPoints[count+1];
+                normal[0] = x2;
+                normal[1] = y2;
+                normal[2] = z2;
 
                 normalize(normal);
                 gl.glNormal3dv(normal,0);
-
                 tCoord = 1.0/maxStacks * (i+1);
                 gl.glTexCoord2d(sCoord,tCoord);
-                gl.glVertex3d(leafPoints[count+1][0]+myX,
-                        leafPoints[count+1][1]+myY+trunkHeight+(0.85*leavesRadius),
-                        leafPoints[count+1][2]+myZ);
-
-                count += 2;
+                gl.glVertex3d(x2+myX,y2+myY+trunkHeight+(0.85*leavesRadius),z2+myZ);
 
             };
             gl.glEnd();
