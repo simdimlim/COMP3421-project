@@ -232,7 +232,17 @@ public class Terrain {
     }
 
     public void createTexture(GL2 gl){
+
         terrainTexture = new Texture(gl, "grass2.png", "png", true);
+        for (Tree t : myTrees){
+            t.createTexture(gl);
+        }
+
+        for (Road t : myRoads){
+            t.createTexture(gl);
+        }
+
+
     }
 
     public Texture getTerrainTexture(){

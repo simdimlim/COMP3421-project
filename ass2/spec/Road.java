@@ -213,6 +213,10 @@ public class Road {
         return Math.sqrt(mag);
     }
 
+    public void createTexture(GL2 gl){
+        roadTexture = new Texture(gl, "road2.jpg", "jpg", true);
+    }
+
     private double[] normalise(double[] tangent, double[] normal){
         double magnitude = getMagnitude(tangent);
         double[] normalised = {normal[0]/magnitude, normal[1]/magnitude};
@@ -221,7 +225,6 @@ public class Road {
 
     public void draw(GL2 gl, Terrain terrain){
         gl.glPushMatrix();
-        roadTexture = new Texture(gl, "road2.jpg", "jpg", true);
         gl.glBindTexture(GL2.GL_TEXTURE_2D, roadTexture.getTextureId());
 
         double width = myWidth/2;
