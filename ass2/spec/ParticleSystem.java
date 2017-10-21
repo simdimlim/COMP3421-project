@@ -113,7 +113,7 @@ public class ParticleSystem {
             speedY = speed * (float)Math.sin(angle) + speedYGlobal;
             speedZ = (rand.nextFloat() - 0.5f) * maxSpeed;
 
-            System.out.println(x + " " + 5 + " " + z);
+//            System.out.println(x + " " + 5 + " " + z);
             speedY = 0.0;
         }
     }

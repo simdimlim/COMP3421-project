@@ -73,6 +73,10 @@ public class Camera implements KeyListener {
         }
     }
 
+    public boolean isAvatarMode() {
+        return avatarView;
+    }
+
     public void drawAv(GL2 gl) {
         myAvatar.drawAvatar(gl);
     }
@@ -97,7 +101,7 @@ public class Camera implements KeyListener {
                     myAvatar.changeFpsPos(position[0], position[2]);
                 }
                 if (inMap()) {
-                    position[1] = myTerrain.altitude(position[0], position[2]) + 0.3;
+                    position[1] = myTerrain.altitude(position[0], position[2]) + 0.5;
                     myAvatar.setY(position[1]);
                 }
                 break;
@@ -113,20 +117,28 @@ public class Camera implements KeyListener {
                     myAvatar.changeFpsPos(position[0], position[2]);
                 }
                 if (inMap()) {
-                    position[1] = myTerrain.altitude(position[0], position[2]) + 0.3;
+                    position[1] = myTerrain.altitude(position[0], position[2]) + 0.5;
                     myAvatar.setY(position[1]);
                 }
                 break;
 
             case KeyEvent.VK_LEFT:
-                rotateY -= 0.1;
+                if (avatarView) {
+                    rotateY -= 0.02;
+                } else {
+                    rotateY -= 0.1;
+                }
                 lineofsight[0] = Math.sin(rotateY);
                 lineofsight[2] = -Math.cos(rotateY);
                 myAvatar.rotate(1.5);
                 break;
 
             case KeyEvent.VK_RIGHT:
-                rotateY += 0.1;
+                if (avatarView) {
+                    rotateY += 0.02;
+                } else {
+                    rotateY += 0.1;
+                }
                 lineofsight[0] = Math.sin(rotateY);
                 lineofsight[2] = -Math.cos(rotateY);
                 myAvatar.rotate(-1.5);

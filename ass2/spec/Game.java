@@ -30,6 +30,8 @@ public class Game extends JFrame implements GLEventListener{
     	super("Assignment 2");
         myTerrain = terrain;
         myAvatar = new Avatar();
+        camera = new Camera(myAvatar, myTerrain);
+        myLighting = new Lighting(myAvatar, camera);
     }
     
     /** 
@@ -46,9 +48,9 @@ public class Game extends JFrame implements GLEventListener{
         FPSAnimator animator = new FPSAnimator(60);
         animator.add(panel);
         animator.start();
-        camera = new Camera(myAvatar, myTerrain);
         panel.addGLEventListener(this);
         panel.addKeyListener(camera);
+        panel.addKeyListener(myLighting);
         panel.setFocusable(true);
 
         getContentPane().add(panel);
@@ -112,7 +114,6 @@ public class Game extends JFrame implements GLEventListener{
 	@Override
 	public void init(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
-        myLighting = new Lighting();
 
         gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
