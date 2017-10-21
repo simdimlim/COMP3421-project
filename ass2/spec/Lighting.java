@@ -60,7 +60,7 @@ public class Lighting implements KeyListener {
 
         if (torchOn) {
             // Light property vectors.
-            float lightAmb[] = {0.4f, 0.4f, 0.4f, 1.0f};
+            float lightAmb[] = {0.0f, 0.0f, 0.0f, 1.0f};
             float lightDifAndSpec[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
             // Light properties.
