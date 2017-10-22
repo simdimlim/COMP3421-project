@@ -31,6 +31,7 @@ public class Lighting implements KeyListener {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("kk");
         hour = Integer.parseInt(sdf.format(cal.getTime()));
+        System.out.println(hour);
         this.myTerrain = myTerrain;
     }
 
@@ -145,11 +146,19 @@ public class Lighting implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_N) {
-            nightMode = !nightMode;
-        } else if (e.getKeyCode() == KeyEvent.VK_T) {
-            torchOn = !torchOn;
+        switch(e.getKeyCode()) {
+            case KeyEvent.VK_N:
+                nightMode = !nightMode;
+                break;
+            case KeyEvent.VK_T:
+                torchOn = !torchOn;
+                break;
+            case KeyEvent.VK_L:
+                hour = (hour + 2) % 24;
+                System.out.println(hour);
+                break;
         }
+
     }
 
     @Override
