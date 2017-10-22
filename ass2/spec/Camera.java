@@ -35,6 +35,7 @@ public class Camera implements KeyListener {
 
     public double getEyeX(){
         if (avatarView) {
+            // eye of camera is distance units behind avatar
             return myAvatar.getX() - (distance * Math.sin(Math.toRadians(myAvatar.getRotY())));
         } else {
             return position[0];
@@ -51,6 +52,7 @@ public class Camera implements KeyListener {
 
     public double getEyeZ() {
         if (avatarView) {
+            // eye of camera is distance units behind avatar
            return myAvatar.getZ()-(distance * Math.cos(Math.toRadians(myAvatar.getRotY())));
         } else {
             return position[2];
@@ -93,6 +95,7 @@ public class Camera implements KeyListener {
             case KeyEvent.VK_UP:
                 if (avatarView) {
                     myAvatar.tpsMoveUp();
+                    // change fps camera's position to avatar's position
                     position[0] = myAvatar.getX();
                     position[2] = myAvatar.getZ();
                 } else {

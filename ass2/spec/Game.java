@@ -31,7 +31,7 @@ public class Game extends JFrame implements GLEventListener{
         myTerrain = terrain;
         myAvatar = new Avatar();
         camera = new Camera(myAvatar, myTerrain);
-        myLighting = new Lighting(myAvatar, camera);
+        myLighting = new Lighting(myAvatar, camera, myTerrain);
     }
     
     /** 
