@@ -78,24 +78,7 @@ public class Lighting implements KeyListener {
     public void drawDirectionLight(GL2 gl, float[] sunlight){
 
         // determine position of the sun depending on the time of day
-        float[] lightPos0 = new float[3];
-
-        if ((hour >= 20 && hour <= 24) || (hour > 0 && hour < 7)) {
-            // sunrise from the east
-            lightPos0[0] = -1.0f;
-            lightPos0[1] = 0.0f;
-            lightPos0[2] = (float)(myTerrain.size().width * 0.5);
-        } else if (hour >= 7 && hour < 17) {
-            // midday - sun directly above terrain
-            lightPos0[0] = (float)(myTerrain.size().width * 0.5);
-            lightPos0[1] = 1.0f;
-            lightPos0[2] = (float)(myTerrain.size().width * 0.5);
-        } else if (hour >= 17 && hour < 20) {
-            // sunset in the west
-            lightPos0[0] = (float)(myTerrain.size().width + 1);
-            lightPos0[1] = 0.0f;
-            lightPos0[2] = (float)(myTerrain.size().width * 0.5);
-        }
+        float[] lightPos0 = {sunlight[0], sunlight[1], sunlight[2], 0};
 
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, lightPos0,0);
 

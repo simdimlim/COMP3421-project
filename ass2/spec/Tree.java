@@ -66,6 +66,13 @@ public class Tree {
     }
 
     public void draw(GL2 gl) {
+        float[] rhoD = new float[] { 0.4f, 0.2f, 0.3f, 1.0f };
+        float[] rhoS = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
+
+//        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, rhoA, 0);
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, rhoD, 0);
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, rhoS, 0);
+
         drawTrunk(gl);
         drawLeaves(gl);
     }
