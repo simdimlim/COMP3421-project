@@ -147,6 +147,11 @@ public class Camera implements KeyListener {
             case KeyEvent.VK_A:
                 avatarView = !avatarView;
                 break;
+
+            case KeyEvent.VK_Z:
+                Cube c = new Cube(position[0] +lineofsight[0]*2, position[1] + lineofsight[1]*2, position[2] +lineofsight[2]*2, "immediate");
+                myTerrain.addCube(c);
+                break;
         }
     }
 

@@ -17,14 +17,14 @@ import static com.jogamp.opengl.GL.GL_TEXTURE_2D;
 public class Cube {
 
     private double[] position;
-
+    private String type;
     private float vertex[] = {
-            1,1,1,    -1,1,1,    -1,-1,1,    1,-1,1,        // v0-v1-v2-v3
-            1,1,1,     1,-1,1,    1,-1,-1,   1,1,-1,        // v0-v3-v4-v5
-            1,1,1,     1,1,-1,   -1,1,-1,   -1,1,1,         // v0-v5-v6-v1
-            -1,1,1,    -1,1,-1,   -1,-1,-1,  -1,-1,1,		// v1-v6-v7-v2
-            -1,-1,-1,   1,-1,-1,   1,-1,1,   -1,-1,1,        // v7-v4-v3-v2
-            1,-1,-1,  -1,-1,-1,  -1,1,-1,    1,1,-1
+            0.5f,0.5f,0.5f,    -0.5f,0.5f,0.5f,    -0.5f,-0.5f,0.5f,    0.5f,-0.5f,0.5f,        // v0-v1-v2-v3
+            0.5f,0.5f,0.5f,     0.5f,-0.5f,0.5f,    0.5f,-0.5f,-0.5f,   0.5f,0.5f,-0.5f,        // v0-v3-v4-v5
+            0.5f,0.5f,0.5f,     0.5f,0.5f,-0.5f,   -0.5f,0.5f,-0.5f,   -0.5f,0.5f,0.5f,         // v0-v5-v6-v0.5f
+            -0.5f,0.5f,0.5f,    -0.5f,0.5f,-0.5f,   -0.5f,-0.5f,-0.5f,  -0.5f,-0.5f,0.5f,		// v0.5f-v6-v7-v2
+            -0.5f,-0.5f,-0.5f,   0.5f,-0.5f,-0.5f,   0.5f,-0.5f,0.5f,   -0.5f,-0.5f,0.5f,        // v7-v4-v3-v2
+            0.5f,-0.5f,-0.5f,  -0.5f,-0.5f,-0.5f,  -0.5f,0.5f,-0.5f,    0.5f,0.5f,-0.5f
     };	    // v4-v7-v6-v5
 
     private float colorsCube[] =     {
@@ -48,11 +48,12 @@ public class Cube {
 
     private int shaderprogram;
 
-    public Cube(double x, double y, double z){
+    public Cube(double x, double y, double z, String t){
         position = new double[3];
         position[0] = x;
         position[1] = y;
         position[2] = z;
+        type = t;
     }
 
     public void init(GL2 gl){
@@ -79,35 +80,51 @@ public class Cube {
     }
 
     public void draw(GL2 gl){
-        gl.glPushMatrix();
+        if (type.equals("VBO")) {
+            gl.glPushMatrix();
+            // Material property vectors.
 
-        gl.glUseProgram(shaderprogram);
-        gl.glBindBuffer(GL.GL_ARRAY_BUFFER,bufferIds[0]);
+            gl.glUseProgram(shaderprogram);
+            gl.glBindBuffer(GL.GL_ARRAY_BUFFER, bufferIds[0]);
 
-        int vertexColLoc = gl.glGetAttribLocation(shaderprogram,"vertexCol");
-        int vertexPosLoc = gl.glGetAttribLocation(shaderprogram,"vertexPos");
+            int vertexColLoc = gl.glGetAttribLocation(shaderprogram, "vertexCol");
+            int vertexPosLoc = gl.glGetAttribLocation(shaderprogram, "vertexPos");
 
-        // Specify locations for the co-ordinates and color arrays.
-        gl.glEnableVertexAttribArray(vertexPosLoc);
-        gl.glEnableVertexAttribArray(vertexColLoc);
+            // Specify locations for the co-ordinates and color arrays.
+            gl.glEnableVertexAttribArray(vertexPosLoc);
+            gl.glEnableVertexAttribArray(vertexColLoc);
 
-        gl.glTranslated(position[0], position[1], position[2]);
-        gl.glVertexAttribPointer(vertexPosLoc,3, GL.GL_FLOAT, false,0, 0); //last num is the offset
-        gl.glVertexAttribPointer(vertexColLoc,3, GL.GL_FLOAT, false,0, vertex.length*Float.BYTES);
+            gl.glTranslated(position[0], position[1], position[2]);
+            gl.glVertexAttribPointer(vertexPosLoc, 3, GL.GL_FLOAT, false, 0, 0); //last num is the offset
+            gl.glVertexAttribPointer(vertexColLoc, 3, GL.GL_FLOAT, false, 0, vertex.length * Float.BYTES);
 
-        gl.glDrawArrays(GL2.GL_QUADS, 0, 24);
-        gl.glUseProgram(0);
+            gl.glDrawArrays(GL2.GL_QUADS, 0, 24);
+            gl.glUseProgram(0);
 
-        gl.glBindBuffer(GL.GL_ARRAY_BUFFER,0);
-        gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+            gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
+            gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
 
-        gl.glPopMatrix();
+            gl.glPopMatrix();
+        } else {
+            drawCube(gl);
+        }
     }
 
     // draw the cube in immediate mode, just checking if it works
     public void drawCube(GL2 gl){
         gl.glDisable(GL_TEXTURE_2D);
         gl.glPushMatrix();
+
+        float matAmbAndDif1[] = {0.9f, 0.0f, 0.0f, 1.0f};
+        float matSpec1[] = {0.2f, 0.2f, 0.2f, 1f};
+
+        float matShine[] = {150.0f};
+
+        //Set front and back to have different colors to make debugging easier
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif1,0);
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, matSpec1,0);
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SHININESS, matShine,0);
+
         gl.glTranslated(position[0], position[1], position[2]);
         gl.glBegin(GL2.GL_QUADS);
         // front

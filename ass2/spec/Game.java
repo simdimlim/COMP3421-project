@@ -144,8 +144,7 @@ public class Game extends JFrame implements GLEventListener{
         gl.glLoadIdentity();
 
         GLU glu = new GLU();
-        // random nuymbers really idk wtf is happening
-        glu.gluPerspective(60, 1, 1, 50);
+        glu.gluPerspective(70, 1, 1, 50);
 	}
 
 }

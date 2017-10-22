@@ -229,21 +229,16 @@ public class Road {
 
         double width = myWidth/2;
         // Material property vectors.
-//        float matAmbAndDif1[] = {0.7f, 0.2f, 0.7f, 1.0f};
-//        float matAmbAndDif2[] = {0f, 1f, 0f, 1.0f};
-//        float matSpec1[] = {0.2f, 0.2f, 0.2f, 1f};
-//
-//        float matShine[] = {150.0f};
-//
-//        //Set front and back to have different colors to make debugging easier
-//        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif1,0);
-//        gl.glMaterialfv(GL2.GL_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif2,0);
-//        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, matSpec1,0);
-//        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SHININESS, matShine,0);
-//
-//
-//        gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 80);	// phong
-//
+        float matAmbAndDif1[] = {173f, 216f, 230f, 1f};
+        float matSpec1[] = {173f, 216f, 230f, 1f};
+
+        float matShine[] = {50.0f};
+
+        //Set front and back to have different colors to make debugging easier
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif1,0);
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, matSpec1,0);
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SHININESS, matShine,0);
+
         gl.glBegin(GL2.GL_TRIANGLE_STRIP);
         gl.glColor3f(1,1,1);
         for(double i = 0; i < this.size(); i += 0.002){

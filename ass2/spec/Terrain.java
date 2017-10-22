@@ -228,10 +228,14 @@ public class Terrain {
         myTrees.add(tree);
     }
 
-    public void addCube(double x, double z){
+    public void addCube(double x, double z, String type){
         double y = altitude(x, z);
-        Cube cube = new Cube(x, y, z);
+        Cube cube = new Cube(x, y+0.5, z, "VBO");
         myCubes.add(cube);
+    }
+
+    public void addCube(Cube c){
+        myCubes.add(c);
     }
 
     public void createTexture(GL2 gl){

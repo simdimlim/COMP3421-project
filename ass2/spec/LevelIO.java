@@ -67,7 +67,7 @@ public class LevelIO {
                 JSONObject other = jsonOther.getJSONObject(i);
                 double x = other.getDouble("x");
                 double z = other.getDouble("z");
-                terrain.addCube(x, z);
+                terrain.addCube(x, z, "VBO");
             }
         }
 

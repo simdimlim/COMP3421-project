@@ -4,15 +4,14 @@ import java.util.Random;
 import com.jogamp.opengl.GL2;
 
 
-
-/**
- * Taken from NeHe Lesson #19a: Fireworks
+/*
+ * Adapted from https://gist.github.com/thaenor/4d9531cc9a7d1c34b998
  */
 public class ParticleSystem {
 
     //private GLU glu;  // for the GL Utility
 
-    private static final int MAX_PARTICLES = 10000; // max number of particles
+    private static final int MAX_PARTICLES = 5000; // max number of particles
     private Particle[] particles;
 
     private static boolean enabledBurst = false;
@@ -46,12 +45,16 @@ public class ParticleSystem {
     public void draw(GL2 gl ) {
         // Render the particles
         gl.glPushMatrix();
+
+        float matAmbAndDif1[] = {0.0f, 0.0f, 0.9f, 1.0f};
+        float matSpec1[] = {0.2f, 0.2f, 0.2f, 1f};
+
+        //Set front and back to have different colors to make debugging easier
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif1,0);
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, matSpec1,0);
         for (int i = 0; i < MAX_PARTICLES; i = i +2) {
             if (particles[i].active) {
                 // Draw the particle using our RGB values
-
-                gl.glColor3f(0.5f, 0.5f, 1.0f);
-
                 gl.glBegin(GL2.GL_LINES);
 
                 double px = particles[i].x;
@@ -59,10 +62,9 @@ public class ParticleSystem {
                 double pz = particles[i].z;
 
                 gl.glVertex3d(px, py, pz);
-                gl.glVertex3d(px, py+0.5, pz);
+                gl.glVertex3d(px, py+0.2, pz);
                 gl.glEnd();
 
-                // Move the particle
                 // Move the particle
                 particles[i].x += particles[i].speedX;
                 particles[i].y += particles[i].speedY;
@@ -102,9 +104,9 @@ public class ParticleSystem {
         public Particle() {
             active = true;
             life = 1.0;
-            x = (Math.random()*10 % rainWidth);
-            y = (Math.random()*10 % 10);
-            z = (Math.random()*10 % rainHeight);
+            x = (rand.nextFloat()*10 % rainWidth);
+            y = (rand.nextFloat()*10 % 10);
+            z = (rand.nextFloat()*10 % rainHeight);
             float maxSpeed = 0.1f;
             float speed = 0.02f + (rand.nextFloat() - 0.5f) * maxSpeed;
             float angle = (float)Math.toRadians(rand.nextInt(360));
@@ -113,7 +115,6 @@ public class ParticleSystem {
             speedY = speed * (float)Math.sin(angle) + speedYGlobal;
             speedZ = (rand.nextFloat() - 0.5f) * maxSpeed;
 
-//            System.out.println(x + " " + 5 + " " + z);
             speedY = 0.0;
         }
     }
