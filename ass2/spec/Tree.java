@@ -139,7 +139,7 @@ public class Tree {
                 double angle0 = i*angleIncrement;
                 double xPos0 = Math.cos(angle0)*0.2;
                 double zPos0 = Math.sin(angle0)*0.2;
-                double sCoord = 2.0/slices * i; //Or * 2 to repeat label
+                double sCoord = 2.0/slices * i;
 
                 gl.glNormal3d(xPos0, 0, zPos0);
                 gl.glTexCoord2d(sCoord,1);

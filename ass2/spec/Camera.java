@@ -35,6 +35,7 @@ public class Camera implements KeyListener {
 
     public double getEyeX(){
         if (avatarView) {
+            // eye of camera is distance units behind avatar
             return myAvatar.getX() - (distance * Math.sin(Math.toRadians(myAvatar.getRotY())));
         } else {
             return position[0];
@@ -51,6 +52,7 @@ public class Camera implements KeyListener {
 
     public double getEyeZ() {
         if (avatarView) {
+            // eye of camera is distance units behind avatar
            return myAvatar.getZ()-(distance * Math.cos(Math.toRadians(myAvatar.getRotY())));
         } else {
             return position[2];
@@ -93,14 +95,18 @@ public class Camera implements KeyListener {
             case KeyEvent.VK_UP:
                 if (avatarView) {
                     myAvatar.tpsMoveUp();
+                    // change fps camera's position to avatar's position
                     position[0] = myAvatar.getX();
                     position[2] = myAvatar.getZ();
                 } else {
                     position[0] += lineofsight[0] * 0.1;
                     position[2] += lineofsight[2] * 0.1;
+                    // change avatar's position to camera's position
                     myAvatar.changeFpsPos(position[0], position[2]);
                 }
                 if (inMap()) {
+                    // if the avatar/camera is on the terrain, let it's y-value be > the altitude
+                    // this is to prevent going through the terrain
                     position[1] = myTerrain.altitude(position[0], position[2]) + 0.5;
                     myAvatar.setY(position[1]);
                 }
@@ -124,6 +130,7 @@ public class Camera implements KeyListener {
 
             case KeyEvent.VK_LEFT:
                 if (avatarView) {
+                    // if in avatar view, rotate the camera less dramatically
                     rotateY -= 0.02;
                 } else {
                     rotateY -= 0.1;
@@ -155,6 +162,11 @@ public class Camera implements KeyListener {
         }
     }
 
+    /**
+     *
+     * Checks if the camera is currently on the terrain map
+     *
+     */
     public boolean inMap() {
         double x = position[0];
         double z = position[2];

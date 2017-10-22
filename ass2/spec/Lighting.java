@@ -4,6 +4,8 @@ import com.jogamp.opengl.GL2;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class Lighting implements KeyListener {
 
@@ -11,31 +13,49 @@ public class Lighting implements KeyListener {
     private float a = 0.6f; // Ambient white light intensity.
     private float d = 0.9f; // Diffuse white light intensity
     private float s = 0.2f; // Specular white light intensity.
-    private float g = 0.2f;
+    private float g = 0.6f;
     private int localViewer = 0;
     private boolean nightMode;
     private boolean torchOn;
     private Avatar myAvatar;
     private Camera myCamera;
+    private Terrain myTerrain;
+    private int hour;
 
-    public Lighting(Avatar myAvatar, Camera myCamera) {
+    public Lighting(Avatar myAvatar, Camera myCamera, Terrain myTerrain) {
         nightMode = false;
         torchOn = false;
         this.myAvatar = myAvatar;
         this.myCamera = myCamera;
+        // get current time of the day as an integer
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("kk");
+        hour = Integer.parseInt(sdf.format(cal.getTime()));
+        this.myTerrain = myTerrain;
     }
 
     public void setLighting(GL2 gl, float[] sunlight){
 
+        // determine ambient and diffuse depending on time of day
         if (nightMode) {
             a = 0.3f;
             d = 0.3f;
-        } else {
-            a = 0.7f;
+        } else if (hour >= 4 && hour < 7) {
+            a = 0.5f;
+            d = 0.5f;
+        } else if (hour >= 7 && hour < 17) {
+            a = 0.9f;
             d = 0.9f;
+        } else if (hour >= 17 && hour < 20) {
+            a = 0.5f;
+            d = 0.5f;
+        } else {
+            a = 0.3f;
+            d = 0.3f;
         }
 
         gl.glEnable(GL2.GL_LIGHT0);
+
         // Light property vectors.
         float lightAmb[] = { a, a, a, 1.0f };
         float lightDif0[] = { d, d, d, 1.0f };
@@ -55,7 +75,27 @@ public class Lighting implements KeyListener {
     }
 
     public void drawDirectionLight(GL2 gl, float[] sunlight){
-        float[] lightPos0 = {sunlight[0], sunlight[1], sunlight[2], 0};
+
+        // determine position of the sun depending on the time of day
+        float[] lightPos0 = new float[3];
+
+        if ((hour >= 20 && hour <= 24) || (hour > 0 && hour < 7)) {
+            // sunrise from the east
+            lightPos0[0] = -1.0f;
+            lightPos0[1] = 0.0f;
+            lightPos0[2] = (float)(myTerrain.size().width * 0.5);
+        } else if (hour >= 7 && hour < 17) {
+            // midday - sun directly above terrain
+            lightPos0[0] = (float)(myTerrain.size().width * 0.5);
+            lightPos0[1] = 1.0f;
+            lightPos0[2] = (float)(myTerrain.size().width * 0.5);
+        } else if (hour >= 17 && hour < 20) {
+            // sunset in the west
+            lightPos0[0] = (float)(myTerrain.size().width + 1);
+            lightPos0[1] = 0.0f;
+            lightPos0[2] = (float)(myTerrain.size().width * 0.5);
+        }
+
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, lightPos0,0);
 
         if (torchOn) {
@@ -73,9 +113,11 @@ public class Lighting implements KeyListener {
             float spotAngle = 10.0f; // Spotlight cone half-angle.
 
             if (myCamera.isAvatarMode()) {
+                // torch points in direction avatar is facing
                 float spotDirection[] = {(float)myAvatar.getDirectionX(), 0.0f, (float)myAvatar.getDirectionZ()};
                 gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPOT_DIRECTION, spotDirection,0);
             } else {
+                // torch points in direction the camera is facing
                 float spotDirection[] = {(float)myCamera.getCenterX(), 0.0f, (float)myCamera.getCenterZ()};
                 gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPOT_DIRECTION, spotDirection,0);
             }
@@ -90,7 +132,8 @@ public class Lighting implements KeyListener {
             gl.glLightf(GL2.GL_LIGHT1, GL2.GL_SPOT_CUTOFF, spotAngle);
             gl.glLightf(GL2.GL_LIGHT1, GL2.GL_SPOT_EXPONENT, spotExponent);
 
-        } else if (nightMode) {
+        } else {
+            // turn off the torch
             gl.glDisable(GL2.GL_LIGHT1);
         }
     }
