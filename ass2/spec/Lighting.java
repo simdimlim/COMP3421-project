@@ -78,9 +78,9 @@ public class Lighting implements KeyListener {
     public void drawDirectionLight(GL2 gl, float[] sunlight){
 
         // determine position of the sun depending on the time of day
-        float[] lightPos0 = {sunlight[0], sunlight[1], sunlight[2], 0};
+        float[] lightPos = {sunlight[0], sunlight[1], sunlight[2], 0};
 
-        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, lightPos0,0);
+        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, lightPos,0);
 
         if (torchOn) {
             // Light property vectors.
@@ -108,11 +108,11 @@ public class Lighting implements KeyListener {
 
             float spotExponent = 2.0f; // Spotlight exponent = attenuation factor.
 
-            float lightPos[] = {(float) (myAvatar.getX()),
+            float lightPoss[] = {(float) (myAvatar.getX()),
                     (float) (myAvatar.getY()+0.2),
                     (float) (myAvatar.getZ()), 1.0f}; // Spotlight position.
 
-            gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, lightPos,0);
+            gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, lightPoss,0);
             gl.glLightf(GL2.GL_LIGHT1, GL2.GL_SPOT_CUTOFF, spotAngle);
             gl.glLightf(GL2.GL_LIGHT1, GL2.GL_SPOT_EXPONENT, spotExponent);
 

@@ -1,0 +1,2 @@
+We have implemented the Rain system, found in particleSystem.java as well night mode and a sun cycle found in Lighting.java
+There is also cube generation like minecraft found in Cube.java. This is an extension on the "other" component of the assignment

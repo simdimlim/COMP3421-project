@@ -228,7 +228,7 @@ public class Road {
         double width = myWidth/2;
         // Material property vectors.
         float[] rhoA = new float[] { 0.8f, 0.1f, 0.2f, 1.0f };
-        float[] rhoD = new float[] { 0.2f, 0.1f, 0.9f, 1.0f };
+        float[] rhoD = new float[] { 0.2f, 0.1f, 0.4f, 1.0f };
         float[] rhoS = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
 
 //        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, rhoA, 0);
