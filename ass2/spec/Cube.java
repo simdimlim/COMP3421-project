@@ -127,22 +127,25 @@ public class Cube {
 
         gl.glTranslated(position[0], position[1], position[2]);
         gl.glBegin(GL2.GL_QUADS);
-        // front
 
+        // front
+        gl.glNormal3d(0,0,1);
         gl.glColor3f(1, 1, 1);
         gl.glVertex3d(0, 0, 0);
         gl.glVertex3d(1, 0, 0);
         gl.glVertex3d(1, 1, 0);
         gl.glVertex3d(0, 1, 0);
+
         // back
+        gl.glNormal3d(0,0,-1);
         gl.glColor3f(1, 1, 0);
         gl.glVertex3d(0, 0, -1);
         gl.glVertex3d(0, 1, -1);
         gl.glVertex3d(1, 1, -1);
         gl.glVertex3d(1, 0, -1);
 
-
         // top
+        gl.glNormal3d(0,1,0);
         gl.glColor3f(1, 0, 0);
         gl.glVertex3d(0, 1, 0);
         gl.glVertex3d(1, 1, 0);
@@ -150,6 +153,7 @@ public class Cube {
         gl.glVertex3d(0, 1, -1);
 
         // bottom
+        gl.glNormal3d(0,-1,0);
         gl.glColor3f(0, 1, 0);
         gl.glVertex3d(0, 0, 0);
         gl.glVertex3d(0, 0, -1);
@@ -157,6 +161,7 @@ public class Cube {
         gl.glVertex3d(1, 0, 0);
 
         //left
+        gl.glNormal3d(-1,0,0);
         gl.glColor3f(0, 1, 1);
         gl.glVertex3d(0, 1, -1);
         gl.glVertex3d(0, 0, -1);
@@ -164,6 +169,7 @@ public class Cube {
         gl.glVertex3d(0, 1, 0);
 
         //right
+        gl.glNormal3d(1,0,0);
         gl.glColor3f(0, 0, 1);
         gl.glVertex3d(1, 0, -1);
         gl.glVertex3d(1, 1, -1);

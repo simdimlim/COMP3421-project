@@ -14,6 +14,9 @@ import com.jogamp.opengl.util.awt.ImageUtil;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
+/*
+ * Taken from the lecture slides
+ */
 public class Texture {
     private int[] textureID = new int[1];
     private boolean mipMapEnabled = true;

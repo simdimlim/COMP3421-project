@@ -7,10 +7,8 @@ import com.jogamp.opengl.GLAutoDrawable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * COMMENT: Comment Road 
- *
- * @author malcolmr
+/*
+ * Road bezier curve
  */
 public class Road {
 
@@ -229,15 +227,18 @@ public class Road {
 
         double width = myWidth/2;
         // Material property vectors.
-        float matAmbAndDif1[] = {173f, 216f, 230f, 1f};
-        float matSpec1[] = {173f, 216f, 230f, 1f};
+        float[] rhoA = new float[] { 0.8f, 0.1f, 0.2f, 1.0f };
+        float[] rhoD = new float[] { 0.2f, 0.1f, 0.9f, 1.0f };
+        float[] rhoS = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
 
-        float matShine[] = {50.0f};
+//        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, rhoA, 0);
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, rhoD, 0);
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, rhoS, 0);
 
-        //Set front and back to have different colors to make debugging easier
-        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, matAmbAndDif1,0);
-        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, matSpec1,0);
-        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SHININESS, matShine,0);
+        // Set the shininess (i.e. the Phong exponent)
+
+        int phong = 10;
+        gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, phong);
 
         gl.glBegin(GL2.GL_TRIANGLE_STRIP);
         gl.glColor3f(1,1,1);
@@ -255,6 +256,7 @@ public class Road {
             normalPoint[1] *= width;
 
             // draw the left and right points
+            // hacky normal
             gl.glNormal3d(0, 1, 0);
             gl.glTexCoord2d(spinePoint[0] - normalPoint[0],
                         spinePoint[2] - normalPoint[1]);

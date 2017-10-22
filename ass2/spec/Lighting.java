@@ -10,10 +10,10 @@ import java.util.Calendar;
 public class Lighting implements KeyListener {
 
     //Setting for light 0
-    private float a = 0.6f; // Ambient white light intensity.
+    private float a = 0.9f; // Ambient white light intensity.
     private float d = 0.9f; // Diffuse white light intensity
     private float s = 0.2f; // Specular white light intensity.
-    private float g = 0.6f;
+    private float g = 0.9f;
     private int localViewer = 0;
     private boolean nightMode;
     private boolean torchOn;

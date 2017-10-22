@@ -94,7 +94,6 @@ public class ParticleSystem {
     class Particle {
         boolean active; // always active in this program
         double life;     // how alive it is
-        double r, g, b;  // color
         double x, y, z;  // position
         double speedX, speedY, speedZ; // speed in the direction
 
@@ -104,6 +103,7 @@ public class ParticleSystem {
         public Particle() {
             active = true;
             life = 1.0;
+            // position the rain
             x = (rand.nextFloat()*10 % rainWidth);
             y = (rand.nextFloat()*10 % 10);
             z = (rand.nextFloat()*10 % rainHeight);
