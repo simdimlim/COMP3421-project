@@ -44,7 +44,7 @@ public class Terrain {
         particleSystem = new ParticleSystem(width, depth);
         setNormals();
     }
-    
+
     public Terrain(Dimension size) {
         this(size.width, size.height);
     }
@@ -98,7 +98,12 @@ public class Terrain {
         }
     }
 
-    public void setNormals(){
+    /**
+     *
+     * Calculate normals for the terrain.
+     *
+     */
+    public void setNormals() {
         int count = 0;
         for (int z = 0; z < mySize.height-1; z++){
             for (int x = 0; x < mySize.width-1; x++){
@@ -251,6 +256,7 @@ public class Terrain {
     public Texture getTerrainTexture(){
         return terrainTexture;
     }
+
     /*
      * Add a road. 
      * 
@@ -291,7 +297,6 @@ public class Terrain {
         for (int z = 0; z < mySize.height - 1; z++){
             for (int x = 0; x < mySize.width - 1; x++){
                 gl.glBegin(GL2.GL_TRIANGLE_STRIP);
-//                System.out.println(x + " " + altitude(x, z) + " " + z);
                 // set the normal here
                 gl.glNormal3dv(myNormals[count], 0);
                 gl.glTexCoord2d(0,0);

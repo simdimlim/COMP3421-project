@@ -82,10 +82,12 @@ public class Game extends JFrame implements GLEventListener{
 
         GLU glu = new GLU();
 
+        // set up the camera
         glu.gluLookAt(	camera.getEyeX(), camera.getY(), camera.getEyeZ(),
                 camera.getCenterX(), camera.getY(),  camera.getCenterZ(),
                 0.0f, 1.0f,  0.0f);
 
+        // set up lighting
         setLighting(gl);
 
         gl.glEnable(GL2.GL_CULL_FACE);
@@ -93,8 +95,6 @@ public class Game extends JFrame implements GLEventListener{
         gl.glColor4d(1, 1, 1, 1);
 
         gl.glBindTexture(GL2.GL_TEXTURE_2D, myTerrain.getTerrainTexture().getTextureId());
-
-        //Move camera
 
         myTerrain.draw(gl);
 
@@ -128,8 +128,7 @@ public class Game extends JFrame implements GLEventListener{
         // turn on a light. Use default settings.
         gl.glEnable(GL2.GL_LIGHT0);
 
-        // normalise normals (!)
-//         this is necessary to make lighting work properly
+        // normalise normals
         gl.glEnable(GL2.GL_NORMALIZE);
 
         myTerrain.setNormals();
@@ -144,7 +143,6 @@ public class Game extends JFrame implements GLEventListener{
         gl.glLoadIdentity();
 
         GLU glu = new GLU();
-        // random nuymbers really idk wtf is happening
         glu.gluPerspective(60, 1, 1, 50);
 	}
 
